@@ -34,8 +34,9 @@
 .liteAccordion > ol { position: relative; overflow: hidden; height: 100%; margin: 0; padding: 0; list-style-type: none }
 .liteAccordion > ol > li { list-style-type: none }
 .liteAccordion .slide > h2 {
-    font-family: CodePro;
+    overflow: hidden;
     color: black;
+    font-family: CodePro;
     font-size: 45px;
     font-weight: normal;
     margin: 0;

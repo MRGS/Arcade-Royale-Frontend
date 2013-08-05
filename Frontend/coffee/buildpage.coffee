@@ -37,3 +37,6 @@ $ ->
         "containerHeight": $(window).height(),
         "headerWidth":80,
         "slideSpeed":400})
+
+    # $(document).keydown (e) ->
+    #     console.log e.which
