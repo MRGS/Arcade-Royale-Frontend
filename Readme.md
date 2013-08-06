@@ -6,3 +6,5 @@ that.
 
 In the meantime, to preview it properly you'll probably need to either run it
 on a server, or launch Chrome with the --allow-file-access-from-files flag.
+
+Trello board for this: https://trello.com/b/XqlE8VUI/arcade-royale-launcher
