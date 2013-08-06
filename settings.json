@@ -1,17 +1,18 @@
 {
     "basedirectory": "../Games/",
     "directories": [
-        "poopdogs",
-        "megagame",
-        "cool hero 8",
-        "ohiforgotmyhat",
-        "dontmesswithhexes",
-        "afoolandhisbrunch",
-        "EAT",
-        "hihello"
+        "fuzzer",
+        "ggvg",
+        "gpc",
+        "pax",
+        "dastards",
+        "swoooords",
+        "thurstburst",
+        "verteidiger",
+        "volkenessen"
     ],
-    "leftColour" : "#a3418c",
-    "rightColour" : "#5a91e3",
+    "leftColour" : "#5a91e3",
+    "rightColour" : "#a3418c",
     "keys": {
         "home": "Esc",
         "player1": {

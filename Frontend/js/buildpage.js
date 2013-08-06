@@ -259,7 +259,7 @@
     for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
       dir = _ref[i];
       $.ajax({
-        url: settings.basedirectory + dir + '/data.json',
+        url: settings.basedirectory + dir + '/arcadedata.json',
         async: false,
         dataType: "json",
         success: function(data) {

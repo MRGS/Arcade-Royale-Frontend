@@ -89,7 +89,7 @@ $ ->
         # We use the more verbose ajax() syntax so that we can specify that it
         # not run asynchronously
         $.ajax({
-            url: settings.basedirectory + dir + '/data.json'
+            url: settings.basedirectory + dir + '/arcadedata.json'
             async: false,
             dataType: "json",
             success: (data) ->
