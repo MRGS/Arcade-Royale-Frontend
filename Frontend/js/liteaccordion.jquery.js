@@ -346,27 +346,8 @@
                     header.removeClass('selected').filter(triggerTab.elem).addClass('selected');
                 },
 
-                ieClass : function(version) {
-                    if (version < 7) methods.destroy();
-                    if (version >= 10) return;
-                    if (version === 7 || version === 8) {
-                        slides.each(function(index) {
-                            $(this).addClass('slide-' + index);
-                        });
-                    }
-
-                    elem.addClass('ie ie' + version);
-                },
-
                 init : function() {
-                    var ua = navigator.userAgent,
-                        index = ua.indexOf('MSIE');
 
-                    // test for ie
-                    if (index !== -1) {
-                        ua = ua.slice(index + 5, index + 7);
-                        core.ieClass(+ua);
-                    }
 
                     // init styles and events
                     core.setStyles();
@@ -377,17 +358,6 @@
 
                     // init autoplay
                     settings.autoPlay && methods.play();
-
-                    $(document).keydown(function(e) {
-                        var key = e.which;
-
-                        if (key == 37) {
-                            methods.prev(); // Left
-                        }
-                        else if (key == 39) {
-                            methods.next(); // Right
-                        }
-                    });
                 }
             };
 

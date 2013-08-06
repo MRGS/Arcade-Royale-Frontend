@@ -1,0 +1,50 @@
+{
+    "basedirectory": "../Games/",
+    "directories": [
+        "poopdogs",
+        "megagame",
+        "cool hero 8",
+        "ohiforgotmyhat",
+        "dontmesswithhexes",
+        "afoolandhisbrunch",
+        "EAT",
+        "hihello"
+    ],
+    "leftColour" : "#a3418c",
+    "rightColour" : "#5a91e3",
+    "keys": {
+        "home": "Esc",
+        "player1": {
+            "up":     "Up",
+            "down":   "Down",
+            "left":   "Left",
+            "right":  "Right",
+            "a":      "Z",
+            "b":      "X"
+        },
+        "player2": {
+            "up":     "R",
+            "down":   "F",
+            "left":   "D",
+            "right":  "G",
+            "a":      "A",
+            "b":      "S"
+        },
+        "player3": {
+            "up":     "O",
+            "down":   "L",
+            "left":   "K",
+            "right":  ";",
+            "a":      "H",
+            "b":      "J"
+        },
+        "player4": {
+            "up":     "Home",
+            "down":   "End",
+            "left":   "Delete",
+            "right":  "Page Down",
+            "a":      "B",
+            "b":      "N"
+        }
+    }
+}
