@@ -1,0 +1,13 @@
+{
+  "main": "index.html",
+  "name": "royaleLauncher",
+  "description": "Arcade Royale Frontend",
+  "version": "0.1.0",
+  "keywords": [ "gams", "videogams" ],
+  "window": {
+    "title": "Arcade Royale Launcher",
+    "toolbar": false,
+    "frame": false,
+    "fullscreen": true
+  }
+}

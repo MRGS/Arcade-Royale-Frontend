@@ -17,7 +17,6 @@
     font-family: CodePro;
     src: url("Code_Pro_Demo.otf");
     font-weight: 400;
-
 }
 
 .liteAccordion {
@@ -30,20 +29,18 @@
     -webkit-perspective: 1000;
     -webkit-tap-highlight-color: transparent;
 }
-.liteAccordion, .liteAccordion * { padding: 0; margin: 0; border: 0; box-sizing: content-box }
 .liteAccordion > ol { position: relative; overflow: hidden; height: 100%; margin: 0; padding: 0; list-style-type: none }
 .liteAccordion > ol > li { list-style-type: none }
 .liteAccordion .slide > h2 {
     overflow: hidden;
-    color: black;
     font-family: CodePro;
-    font-size: 45px;
+    font-size: 60px;
     font-weight: normal;
     margin: 0;
     z-index: 100;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0px;
+    left: 0px;
     -webkit-backface-visibility: hidden; /* fixes chrome bug */
     -webkit-transform: translateX(-100%) rotate(-90deg);
     -webkit-transform-origin: right top;
@@ -54,9 +51,10 @@
     transform: translateX(-100%) rotate(-90deg);
     transform-origin: right top;
 }
+
 .liteAccordion .slide > h2 span {
     display: block;
-    padding-left: 18px;
+    padding-left: 25px;
     text-align: left;
     height: 90%;
     margin-top: 0px;
@@ -85,7 +83,7 @@
 .liteAccordion noscript p { padding: 10px; margin: 0; background: white }
 
 /****************************************** Basic */
-.liteAccordion.basic .slide > h2 { background: #333; color: white; line-height: 225% }
+.liteAccordion.basic .slide > h2 { background: #333; color: white; line-height: 170% }
 
 /****************************************** Dark */
 .liteAccordion.dark {

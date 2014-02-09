@@ -1,13 +1,16 @@
 {
     "basedirectory": "../Games/",
     "directories": [
+        "capsize",
         "fuzzer",
-        "ggvg",
+	"gentlemendispute",
         "gpc",
+        "lavalaunchers",
         "pax",
         "dastards",
         "swoooords",
-        "thurstburst",
+        "superpunchball",
+	"tototemple",
         "verteidiger",
         "volkenessen"
     ],

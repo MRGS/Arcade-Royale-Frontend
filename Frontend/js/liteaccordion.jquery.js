@@ -78,6 +78,11 @@
                     methods.stop();
                     header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
                 },
+				
+				// return current slide
+				current : function() {
+					return core.currentSlide;
+				},
 
                 // destroy plugin instance
                 destroy : function() {
