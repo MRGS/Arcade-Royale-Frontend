@@ -47,7 +47,7 @@ body {
 	text-rendering: optimizeLegibility;
 	color: #000;
 	margin: 0;
-	background: #eee;
+	background: rgb(232, 232, 232);
 	overflow: hidden;
 }
 
@@ -80,17 +80,51 @@ dt { font-weight: bold }
 dd { margin: 0 }
 figure { display: block; width: 100%; height: 100%; margin: 0 }
 
+h1.bigheader {
+	float: left;
+	text-align: right;
+	color: #000;
+	font-family: CodePro;
+	font-weight: normal;
+	font-size: 150px;
+
+}
+
+h1#headerline1 {
+  margin-top: -0.05em;
+  margin-bottom: 0em;
+  line-height: 1em;
+  letter-spacing: -0.03em;
+}
+
+h1#headerline2 {
+  margin-top: 0em;
+  margin-bottom: 0em;
+  line-height: 0.8em;
+  letter-spacing: -0.03em;
+}
+
+h3.infocard {
+	text-align: left;
+	font-size: 25px;
+}
+
+
 .liteAccordion.basic .slide div {
-	background: #555;
+	background: rgb(232, 232, 232);
 }
 .liteAccordion.basic .slide > h2 {
-	background: #555;
+	background: rgb(232, 232, 232);
 	color: white;
 	line-height: 170%
 }
 
+.liteAccordion.basic .slide#infoslide div.slidecontent {
+	padding-top: 180px;
+}
+
 div.slidecontent {
-	padding-top: 80px;
+	padding-top: 40px;
 	padding-right: 5px;
 	text-align: center;
 }
