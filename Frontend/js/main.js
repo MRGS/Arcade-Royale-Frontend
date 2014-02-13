@@ -127,9 +127,9 @@ $(function() {
   var col, i, la, style, t, _k, _len2;
   for (i = _k = 0, _len2 = games.length; _k < _len2; i = ++_k) {
     game = games[i];
-    $("#mainContainer ol").append("<li id=\"slide" + i + "\">\n    <h2><span>" + game.title + "</span></h2>\n    <div class=\"slidecontent\">\n        <h1>" + game.description + "</h1>\n        <h1>" + game.description_fr + "</h1>\n    </div>\n</li>");
+    $("#mainContainer ol").append("<li id=\"slide" + i + "\">\n    <h2><span>" + game.title + "</span></h2>\n    <div class=\"slidecontent\">\n        <h2 class=\"desc-en\">" + game.description + "</h2>\n        <h2 class=\"desc-fr\">" + game.description_fr + "</h2>\n    </div>\n</li>");
     if (game.screenshot !== void 0) {
-      $("#slide" + i + " .slidecontent").append("<img src=\"" + game.screenshot + "\">");
+      $("#slide" + i + " .slidecontent").append("<img src=\"" + game.screenshot + "\" class=\"screenshot\">");
     }
   }
   style = (function() {

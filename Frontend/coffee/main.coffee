@@ -66,8 +66,8 @@ $ ->
             <li id="slide#{ i }">
                 <h2><span>#{ game.title }</span></h2>
                 <div class="slidecontent">
-                    <h1>#{ game.description }</h1>
-                    <h1>#{ game.description_fr }</h1>
+                    <h2 class="desc-en">#{ game.description }</h2>
+                    <h2 class="desc-fr">#{ game.description_fr }</h2>
                 </div>
             </li>
             """
@@ -76,7 +76,7 @@ $ ->
         if game.screenshot isnt undefined
             $("#slide#{ i } .slidecontent").append(
                 """
-                <img src="#{ game.screenshot }">
+                <img src="#{ game.screenshot }" class="screenshot">
                 """
             )
 
