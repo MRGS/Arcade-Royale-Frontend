@@ -1,21 +1,7 @@
 {
-    "basedirectory": "../Games/",
-    "directories": [
-        "capsize",
-        "fuzzer",
-        "gentlemendispute",
-        "gpc",
-        "lavalaunchers",
-        "pax",
-        "dastards",
-        "swoooords",
-        "superpunchball",
-        "tototemple",
-        "verteidiger",
-        "volkenessen"
-    ],
-    "leftColour" : "#5a91e3",
-    "rightColour" : "#a3418c",
+    "baseDirectory": "../Games/",
+    "leftColour": "#5a91e3",
+    "rightColour": "#a3418c",
     "keys": {
         "home": "Esc",
         "player1": {

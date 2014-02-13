@@ -5,30 +5,20 @@ Arcade Royale Launcher
 Hello hello. 2014.
 MIT License.
  */
-var helpers, k, k2, keys, settings, v, v2,
+var file, filenames, fs, games, helpers, k, k2, keys, path, settings, v, v2, _i, _len,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-helpers = require("./js/helpers");
+fs = require('fs');
 
-settings = {};
+helpers = require('./js/helpers');
 
-keys = {};
+settings = JSON.parse(fs.readFileSync('../settings.json'));
 
-$.ajax({
-  url: '../settings.json',
-  async: false,
-  dataType: "json"
-}).success(function(data) {
-  settings.basedirectory = data.basedirectory;
-  settings.directories = data.directories;
-  settings.leftColour = helpers.hexToHsl(data.leftColour);
-  settings.rightColour = helpers.hexToHsl(data.rightColour);
-  settings.args = [];
-  return keys = data.keys;
-}).fail(function(error) {
-  console.log("Error parsing settings file!");
-  return console.log(error);
-});
+settings.leftColour = helpers.hexToHsl(settings.leftColour);
+
+settings.rightColour = helpers.hexToHsl(settings.rightColour);
+
+keys = settings.keys;
 
 for (k in keys) {
   v = keys[k];
@@ -98,29 +88,43 @@ keys.anyB = (function() {
   return _results;
 })();
 
+games = [];
+
+filenames = fs.readdirSync(settings.baseDirectory);
+
+for (_i = 0, _len = filenames.length; _i < _len; _i++) {
+  file = filenames[_i];
+  path = settings.baseDirectory + file;
+  if (fs.statSync(path).isDirectory()) {
+    if (fs.existsSync(path + '/arcadedata.json')) {
+      games.push(JSON.parse(fs.readFileSync(path + '/arcadedata.json')));
+    } else {
+      console.log("Warning: no arcade data file found at " + path);
+    }
+  }
+}
+
+games.sort(function(a, b) {
+  if (a.title > b.title) {
+    return 1;
+  }
+  if (a.title < b.title) {
+    return -1;
+  }
+  return 0;
+});
+
 $(function() {
-  var col, dir, i, la, style, t, _i, _len, _ref;
-  _ref = settings.directories;
-  for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-    dir = _ref[i];
-    $.ajax({
-      url: settings.basedirectory + dir + '/arcadedata.json',
-      async: false,
-      dataType: "json",
-      success: function(data) {
-        settings.args.push(data.args);
-        return $("#mainContainer ol").append("<li id=\"slide" + i + "\">\n    <h2><span>" + data.title + "</span></h2>\n    <div class=\"slidecontent\">\n        <h1>" + data.description + "</h1>\n        <h1>" + data.description_fr + "</h1>\n    </div>\n</li>");
-      }
-    }).fail(function(error) {
-      console.log("Error parsing metadata for game '" + dir + "':");
-      return console.log(error);
-    });
+  var col, game, i, la, style, t, _j, _len1;
+  for (i = _j = 0, _len1 = games.length; _j < _len1; i = ++_j) {
+    game = games[i];
+    $("#mainContainer ol").append("<li id=\"slide" + i + "\">\n    <h2><span>" + game.title + "</span></h2>\n    <div class=\"slidecontent\">\n        <h1>" + game.description + "</h1>\n        <h1>" + game.description_fr + "</h1>\n    </div>\n</li>");
   }
   style = (function() {
-    var _j, _ref1, _results;
+    var _k, _ref, _results;
     _results = [];
-    for (i = _j = 0, _ref1 = settings.directories.length; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      t = i / settings.directories.length;
+    for (i = _k = 0, _ref = games.length; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
+      t = i / games.length;
       col = helpers.hslLerp(settings.leftColour, settings.rightColour, t);
       _results.push("#slide" + i + " h2 { background-color: hsl(" + col.h + ", " + col.s + "%, " + col.l + "%) }\n#slide" + i + " div { background-color: hsl(" + col.h + ", " + col.s + "%, " + col.l + "%) }");
     }
@@ -135,15 +139,15 @@ $(function() {
     "slideSpeed": 400
   }).data('liteAccordion');
   return $(document).keydown(function(e) {
-    var _ref1, _ref2, _ref3, _ref4;
+    var _ref, _ref1, _ref2, _ref3;
     if (e.which === keys.home) {
       la.play(0);
       return la.stop();
-    } else if (_ref1 = e.which, __indexOf.call(keys.anyLeft, _ref1) >= 0) {
+    } else if (_ref = e.which, __indexOf.call(keys.anyLeft, _ref) >= 0) {
       return la.prev();
-    } else if (_ref2 = e.which, __indexOf.call(keys.anyRight, _ref2) >= 0) {
+    } else if (_ref1 = e.which, __indexOf.call(keys.anyRight, _ref1) >= 0) {
       return la.next();
-    } else if ((_ref3 = e.which, __indexOf.call(keys.anyB, _ref3) >= 0) || (_ref4 = e.which, __indexOf.call(keys.anyA, _ref4) >= 0)) {
+    } else if ((_ref2 = e.which, __indexOf.call(keys.anyB, _ref2) >= 0) || (_ref3 = e.which, __indexOf.call(keys.anyA, _ref3) >= 0)) {
       if (la.current() !== 0) {
         return console.log("ok!");
       }
