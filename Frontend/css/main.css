@@ -105,8 +105,9 @@ h1#headerline2 {
 }
 
 h3.infocard {
+	font-weight: 300;
 	text-align: left;
-	font-size: 25px;
+	font-size: 26px;
 }
 
 
