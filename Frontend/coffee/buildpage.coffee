@@ -35,17 +35,22 @@ keys.anyB = (v.b for k, v of keys when v.b isnt undefined)
 
 
 games = []
-
 filenames = fs.readdirSync(settings.baseDirectory)
 
 for file in filenames
     path = settings.baseDirectory + file
     if fs.statSync(path).isDirectory()
         if fs.existsSync(path + '/arcadedata.json')
-            games.push(JSON.parse(fs.readFileSync(path + '/arcadedata.json')))
+            game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'))
+            for ext in ['png', 'gif', 'jpg']
+                if fs.existsSync(path + '/screenshot.' + ext)
+                    game.screenshot = path + '/screenshot.' + ext
+                    break
+            games.push game
         else
             console.log("Warning: no arcade data file found at " + path)
 
+# Alpha sort.
 games.sort (a, b) ->
     if (a.title > b.title)
       return 1
@@ -67,6 +72,13 @@ $ ->
             </li>
             """
         )
+
+        if game.screenshot isnt undefined
+            $("#slide#{ i } .slidecontent").append(
+                """
+                <img src="#{ game.screenshot }">
+                """
+            )
 
     # Generate the styles for each slide...
     style = for i in [0..games.length]

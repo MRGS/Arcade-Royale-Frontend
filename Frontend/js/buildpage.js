@@ -5,7 +5,7 @@ Arcade Royale Launcher
 Hello hello. 2014.
 MIT License.
  */
-var file, filenames, fs, games, helpers, k, k2, keys, path, settings, v, v2, _i, _len,
+var ext, file, filenames, fs, game, games, helpers, k, k2, keys, path, settings, v, v2, _i, _j, _len, _len1, _ref,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 fs = require('fs');
@@ -97,7 +97,16 @@ for (_i = 0, _len = filenames.length; _i < _len; _i++) {
   path = settings.baseDirectory + file;
   if (fs.statSync(path).isDirectory()) {
     if (fs.existsSync(path + '/arcadedata.json')) {
-      games.push(JSON.parse(fs.readFileSync(path + '/arcadedata.json')));
+      game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'));
+      _ref = ['png', 'gif', 'jpg'];
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        ext = _ref[_j];
+        if (fs.existsSync(path + '/screenshot.' + ext)) {
+          game.screenshot = path + '/screenshot.' + ext;
+          break;
+        }
+      }
+      games.push(game);
     } else {
       console.log("Warning: no arcade data file found at " + path);
     }
@@ -115,15 +124,18 @@ games.sort(function(a, b) {
 });
 
 $(function() {
-  var col, game, i, la, style, t, _j, _len1;
-  for (i = _j = 0, _len1 = games.length; _j < _len1; i = ++_j) {
+  var col, i, la, style, t, _k, _len2;
+  for (i = _k = 0, _len2 = games.length; _k < _len2; i = ++_k) {
     game = games[i];
     $("#mainContainer ol").append("<li id=\"slide" + i + "\">\n    <h2><span>" + game.title + "</span></h2>\n    <div class=\"slidecontent\">\n        <h1>" + game.description + "</h1>\n        <h1>" + game.description_fr + "</h1>\n    </div>\n</li>");
+    if (game.screenshot !== void 0) {
+      $("#slide" + i + " .slidecontent").append("<img src=\"" + game.screenshot + "\">");
+    }
   }
   style = (function() {
-    var _k, _ref, _results;
+    var _l, _ref1, _results;
     _results = [];
-    for (i = _k = 0, _ref = games.length; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
+    for (i = _l = 0, _ref1 = games.length; 0 <= _ref1 ? _l <= _ref1 : _l >= _ref1; i = 0 <= _ref1 ? ++_l : --_l) {
       t = i / games.length;
       col = helpers.hslLerp(settings.leftColour, settings.rightColour, t);
       _results.push("#slide" + i + " h2 { background-color: hsl(" + col.h + ", " + col.s + "%, " + col.l + "%) }\n#slide" + i + " div { background-color: hsl(" + col.h + ", " + col.s + "%, " + col.l + "%) }");
@@ -139,15 +151,15 @@ $(function() {
     "slideSpeed": 400
   }).data('liteAccordion');
   return $(document).keydown(function(e) {
-    var _ref, _ref1, _ref2, _ref3;
+    var _ref1, _ref2, _ref3, _ref4;
     if (e.which === keys.home) {
       la.play(0);
       return la.stop();
-    } else if (_ref = e.which, __indexOf.call(keys.anyLeft, _ref) >= 0) {
+    } else if (_ref1 = e.which, __indexOf.call(keys.anyLeft, _ref1) >= 0) {
       return la.prev();
-    } else if (_ref1 = e.which, __indexOf.call(keys.anyRight, _ref1) >= 0) {
+    } else if (_ref2 = e.which, __indexOf.call(keys.anyRight, _ref2) >= 0) {
       return la.next();
-    } else if ((_ref2 = e.which, __indexOf.call(keys.anyB, _ref2) >= 0) || (_ref3 = e.which, __indexOf.call(keys.anyA, _ref3) >= 0)) {
+    } else if ((_ref3 = e.which, __indexOf.call(keys.anyB, _ref3) >= 0) || (_ref4 = e.which, __indexOf.call(keys.anyA, _ref4) >= 0)) {
       if (la.current() !== 0) {
         return console.log("ok!");
       }
