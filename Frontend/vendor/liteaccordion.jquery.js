@@ -61,6 +61,11 @@
                     }, settings.cycleSpeed);
                 },
 
+                // jump to slide number
+                goto : function(index) {
+                    header.eq(index).trigger('click.liteAccordion');
+                },
+
                 // stop elem animation
                 stop : function() {
                     clearInterval(core.playing);

@@ -10,6 +10,8 @@ helpers = require './helpers'
 
 $ = window.$
 
+lastKeypress = 0
+
 settings = JSON.parse(fs.readFileSync('../settings.json'))
 settings.leftColour = helpers.hexToHsl(settings.leftColour)
 settings.rightColour = helpers.hexToHsl(settings.rightColour)
@@ -132,9 +134,10 @@ $ ->
 
     # Handle keypresses
     $(window).keydown (e) ->
+        lastKeypress = process.uptime()
+        la.stop()
         if e.which is keys.home
-            la.play(0)
-            la.stop()
+            la.goto(0)
         else if e.which in keys.anyLeft
             la.prev()
         else if e.which in keys.anyRight
@@ -144,3 +147,9 @@ $ ->
             if ind isnt 0
                 if games[ind - 1].exec_name?
                     cproc.execFile(games[ind - 1].exec_name)
+
+    setInterval( ->
+        now = process.uptime()
+        if now > lastKeypress + 15
+            la.play() # yeah, this call'll fire every second. got a problem, bub?
+    , 1000)
