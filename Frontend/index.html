@@ -7,12 +7,13 @@
         <link href="css/liteaccordion.css" rel="stylesheet" />
         <link href="css/main.css" rel="stylesheet" />
 
-        <script src="vendor/jquery.min.js"></script>
+        <script src="js/jquery.min.js"></script>
         <script src="js/jquery.easing.1.3.js"></script>
         <script src="js/liteaccordion.jquery.js"></script>
-
-        <script src="js/main.js"></script>
-
+        <script type="text/javascript">
+            require('coffee-script/register');
+            require('./coffee/main.coffee');
+        </script>
     </head>
     <body>
         <div id="mainContainer" class="liteAccordion">

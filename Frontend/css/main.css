@@ -110,21 +110,19 @@ h3.infocard {
 	font-size: 26px;
 }
 
-
-.liteAccordion.basic .slide div {
-	background: rgb(232, 232, 232);
-}
-.liteAccordion.basic .slide > h2 {
+/* Vertical headers. */
+.slide > h2 {
 	background: rgb(232, 232, 232);
 	color: white;
 	line-height: 170%
 }
 
-.liteAccordion.basic .slide#infoslide div.slidecontent {
+.slide#infoslide .slidecontent {
 	padding-top: 180px;
+	background: rgb(232, 232, 232);
 }
 
-div.slidecontent {
+.slidecontent {
 	padding-top: 40px;
 	padding-right: 5px;
 	text-align: center;

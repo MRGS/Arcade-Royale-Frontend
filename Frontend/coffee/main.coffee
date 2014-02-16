@@ -1,15 +1,20 @@
+'use strict'
+
 ###
 Arcade Royale Launcher
 Hello hello. 2014.
 MIT License.
 ###
 
-fs = require('fs')
-helpers = require('./js/helpers')
+fs = require 'fs'
+cproc = require 'child_process'
+helpers = require './helpers'
 
 settings = JSON.parse(fs.readFileSync('../settings.json'))
 settings.leftColour = helpers.hexToHsl(settings.leftColour)
 settings.rightColour = helpers.hexToHsl(settings.rightColour)
+
+$ = window.$
 
 keys = settings.keys
 # Parse named keys to keycodes.
@@ -103,7 +108,7 @@ $ ->
 
 
     # Handle keypresses
-    $(document).keydown (e) ->
+    $(window).keydown (e) ->
         if e.which is keys.home
             la.play(0)
             la.stop()
@@ -114,3 +119,4 @@ $ ->
         else if (e.which in keys.anyB) or (e.which in keys.anyA)
             if la.current() != 0
                 console.log("ok!")
+                # cproc.execFile()
