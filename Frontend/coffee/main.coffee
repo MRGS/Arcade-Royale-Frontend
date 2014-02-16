@@ -45,10 +45,26 @@ for file in filenames
     if fs.statSync(path).isDirectory()
         if fs.existsSync(path + '/arcadedata.json')
             game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'))
+
+            # let's check/find our executable.
+            if game.exec_name isnt undefined
+                if fs.existsSync(path + '/' + game.exec_name)
+                    game.exec_name = path + '/' + game.exec_name
+                else
+                    console.log("Warning: executable name not found at " + path + '/' + game.exec_name)
+            else
+                exes = fs.readdirSync(path).filter((elem) -> elem.indexOf('.exe', elem.length - '.exe'.length) isnt -1)
+                if exes.length is 1
+                    game.exec_name = path + '/' + exes[0]
+                else
+                    console.log("Warning: can't find a candidate exe in " + path)
+
+            # now let's find a screenshot.
             for ext in ['png', 'gif', 'jpg']
                 if fs.existsSync(path + '/screenshot.' + ext)
                     game.screenshot = path + '/screenshot.' + ext
                     break
+
             games.push game
         else
             console.log("Warning: no arcade data file found at " + path)
@@ -76,12 +92,22 @@ $ ->
             """
         )
 
-        if game.screenshot isnt undefined
-            $("#slide#{ i } .slidecontent").append(
+        elem = $("#slide#{ i } .slidecontent")
+
+        if game.screenshot?
+            elem.append(
                 """
                 <img src="#{ game.screenshot }" class="screenshot">
                 """
             )
+
+        if game.url?
+            elem.qrcode({
+                height: 180
+                width: 180
+                color: '#fff'
+                text: game.url
+            })
 
     # Generate the styles for each slide...
     style = for i in [0..games.length]
@@ -104,7 +130,6 @@ $ ->
         "slideSpeed":400}
     ).data('liteAccordion')
 
-
     # Handle keypresses
     $(window).keydown (e) ->
         if e.which is keys.home
@@ -115,6 +140,7 @@ $ ->
         else if e.which in keys.anyRight
             la.next()
         else if (e.which in keys.anyB) or (e.which in keys.anyA)
-            if la.current() != 0
-                console.log("ok!")
-                # cproc.execFile()
+            ind = la.current()
+            if ind isnt 0
+                if games[ind - 1].exec_name?
+                    cproc.execFile(games[ind - 1].exec_name)
