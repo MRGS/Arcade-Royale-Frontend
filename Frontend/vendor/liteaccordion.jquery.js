@@ -32,344 +32,314 @@
             easing : 'swing',                       // custom easing function
 
             theme : 'basic',                        // basic, dark, light, or stitch
-            rounded : false,                        // square or rounded corners
-            enumerateSlides : false,                // put numbers on slides
-            linkable : false                        // link slides via hash
         },
 
         // merge defaults with options in new settings object
-            settings = $.extend({}, defaults, options),
+        settings = $.extend({}, defaults, options),
 
         // 'globals'
-            slides = elem.children('ol').children('li'),
-            header = slides.children(':first-child'),
-            slideLen = slides.length,
-            slideWidth = settings.containerWidth - slideLen * settings.headerWidth,
+        slides = elem.children('ol').children('li'),
+        header = slides.children(':first-child'),
+        slideLen = slides.length,
+        slideWidth = settings.containerWidth - slideLen * settings.headerWidth,
 
         // public methods
-            methods = {
+        methods = {
 
-                // start elem animation
-                play : function(index) {
-                    var next = core.nextSlide(index && index);
+            // start elem animation
+            play : function(index) {
+                var next = core.nextSlide(index && index);
 
-                    if (core.playing) return;
+                if (core.playing) return;
 
-                    // start autoplay
-                    core.playing = setInterval(function() {
-                        header.eq(next()).trigger('click.liteAccordion');
-                    }, settings.cycleSpeed);
-                },
+                // start autoplay
+                core.playing = setInterval(function() {
+                    header.eq(next()).trigger('click.liteAccordion');
+                }, settings.cycleSpeed);
+            },
 
-                // jump to slide number
-                goto : function(index) {
-                    header.eq(index).trigger('click.liteAccordion');
-                },
+            // jump to slide number
+            goto : function(index) {
+                header.eq(index).trigger('click.liteAccordion');
+            },
 
-                // stop elem animation
-                stop : function() {
-                    clearInterval(core.playing);
-                    core.playing = 0;
-                },
+            // stop elem animation
+            stop : function() {
+                clearInterval(core.playing);
+                core.playing = 0;
+            },
 
-                // trigger next slide
-                next : function() {
-                    methods.stop();
-                    header.eq(core.currentSlide === slideLen - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
-                },
+            // trigger next slide
+            next : function() {
+                methods.stop();
+                header.eq(core.currentSlide === slideLen - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
+            },
 
-                // trigger previous slide
-                prev : function() {
-                    methods.stop();
-                    header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
-                },
-				
-				// return current slide
-				current : function() {
-					return core.currentSlide;
-				},
+            // trigger previous slide
+            prev : function() {
+                methods.stop();
+                header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
+            },
+			
+			// return current slide
+			current : function() {
+				return core.currentSlide;
+			},
 
-                // destroy plugin instance
-                destroy : function() {
-                    // stop autoplay
-                    methods.stop();
+            // destroy plugin instance
+            destroy : function() {
+                // stop autoplay
+                methods.stop();
 
-                    // remove hashchange event bound to window
-                    $(window).off('.liteAccordion');
+                // remove hashchange event bound to window
+                $(window).off('.liteAccordion');
 
-                    // remove generated styles, classes, data, events
+                // remove generated styles, classes, data, events
+                elem
+                    .attr('style', '')
+                    .removeClass('liteAccordion basic dark light stitch')
+                    .removeData('liteAccordion')
+                    .off('.liteAccordion')
+                    .find('li > :first-child')
+                    .off('.liteAccordion')
+                    .filter('.selected')
+                    .removeClass('selected')
+                    .end()
+                    .find('b')
+                    .remove();
+
+                slides
+                    .removeClass('slide')
+                    .children()
+                    .attr('style', '');
+            },
+
+            // poke around the internals (NOT CHAINABLE)
+            debug : function() {
+                return {
+                    elem : elem,
+                    defaults : defaults,
+                    settings : settings,
+                    methods : methods,
+                    core : core
+                };
+            }
+        },
+
+        // core utility and animation methods
+        core = {
+
+            // set style properties
+            setStyles : function() {
+                // set container height and width, theme and corner style
+                elem
+                    .width(settings.containerWidth)
+                    .height(settings.containerHeight)
+                    .addClass('liteAccordion')
+                    .addClass(settings.theme);
+
+                // set slide heights
+                slides
+                    .addClass('slide')
+                    .children(':first-child')
+                    .height(settings.headerWidth);
+
+                // set slide positions
+                core.setSlidePositions();
+            },
+
+            // set initial positions for each slide
+            setSlidePositions : function() {
+                var selected = header.filter('.selected');
+
+                // account for already selected slide
+                if (!selected.length) header.eq(settings.firstSlide - 1).addClass('selected');
+
+                header.each(function(index) {
+                    var $this = $(this),
+                        left = index * settings.headerWidth,
+                        margin = header.first().next(),
+                        offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
+
+                    // compensate for already selected slide on resize
+                    if (selected.length) {
+                        if (index > header.index(selected)) left += slideWidth;
+                    } else {
+                        if (index >= settings.firstSlide) left += slideWidth;
+                    }
+
+                    // set each slide position
+                    $this
+                        .css('left', left)
+                        .width(settings.containerHeight)
+                        .next()
+                            .width(slideWidth - offset)
+                            .css({ left : left, paddingLeft : settings.headerWidth });
+                });
+            },
+
+            // bind events
+            bindEvents : function() {
+                // bind click and mouseover events
+                if (settings.activateOn === 'click') {
+                    header.on('click.liteAccordion', core.triggerSlide);
+                } else if (settings.activateOn === 'mouseover') {
+                    header.on('click.liteAccordion mouseover.liteAccordion', core.triggerSlide);
+                }
+
+                
+                // pause on hover (can't use custom events with $.hover())
+                if (settings.pauseOnHover && settings.autoPlay) {
                     elem
-                        .attr('style', '')
-                        .removeClass('liteAccordion basic dark light stitch')
-                        .removeData('liteAccordion')
-                        .off('.liteAccordion')
-                        .find('li > :first-child')
-                        .off('.liteAccordion')
-                        .filter('.selected')
-                        .removeClass('selected')
-                        .end()
-                        .find('b')
-                        .remove();
-
-                    slides
-                        .removeClass('slide')
-                        .children()
-                        .attr('style', '');
-                },
-
-                // poke around the internals (NOT CHAINABLE)
-                debug : function() {
-                    return {
-                        elem : elem,
-                        defaults : defaults,
-                        settings : settings,
-                        methods : methods,
-                        core : core
-                    };
+                        .on('mouseover.liteAccordion', function() {
+                            core.playing && methods.stop();
+                        })
+                        .on('mouseout.liteAccordion', function() {
+                            !core.playing && methods.play(core.currentSlide);
+                        });
                 }
             },
 
-        // core utility and animation methods
-            core = {
+            // counter for autoPlay (zero index firstSlide on init)
+            currentSlide : settings.firstSlide - 1,
 
-                // set style properties
-                setStyles : function() {
-                    // set container height and width, theme and corner style
-                    elem
-                        .width(settings.containerWidth)
-                        .height(settings.containerHeight)
-                        .addClass('liteAccordion')
-                        .addClass(settings.rounded && 'rounded')
-                        .addClass(settings.theme);
+            // next slide index
+            nextSlide : function(index) {
+                var next = index + 1 || core.currentSlide + 1;
 
-                    // set slide heights
-                    slides
-                        .addClass('slide')
-                        .children(':first-child')
-                        .height(settings.headerWidth);
+                // closure
+                return function() {
+                    return next++ % slideLen;
+                };
+            },
 
-                    // set slide positions
-                    core.setSlidePositions();
-                },
+            // holds interval counter
+            playing : 0,
 
-                // set initial positions for each slide
-                setSlidePositions : function() {
-                    var selected = header.filter('.selected');
+            slideAnimCompleteFlag : false,
 
-                    // account for already selected slide
-                    if (!selected.length) header.eq(settings.firstSlide - 1).addClass('selected');
-
-                    header.each(function(index) {
-                        var $this = $(this),
-                            left = index * settings.headerWidth,
-                            margin = header.first().next(),
-                            offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
-
-                        // compensate for already selected slide on resize
-                        if (selected.length) {
-                            if (index > header.index(selected)) left += slideWidth;
-                        } else {
-                            if (index >= settings.firstSlide) left += slideWidth;
-                        }
-
-                        // set each slide position
-                        $this
-                            .css('left', left)
-                            .width(settings.containerHeight)
-                            .next()
-                                .width(slideWidth - offset)
-                                .css({ left : left, paddingLeft : settings.headerWidth });
-
-                        // add number to bottom of tab
-                        settings.enumerateSlides && $this.append('<b>' + (index + 1) + '</b>');
-
-                    });
-                },
-
-                // bind events
-                bindEvents : function() {
-                    // bind click and mouseover events
-                    if (settings.activateOn === 'click') {
-                        header.on('click.liteAccordion', core.triggerSlide);
-                    } else if (settings.activateOn === 'mouseover') {
-                        header.on('click.liteAccordion mouseover.liteAccordion', core.triggerSlide);
-                    }
-
-                    // bind hashchange event
-                    if (settings.linkable) {
-                        $(window).on('hashchange.liteAccordion', function(e) {
-                            var url = slides.filter(function() {
-                                return $(this).attr('data-slide-name') === window.location.hash.split('#')[1];
-                            });
-
-                            // if slide name exists
-                            if (url.length) {
-                                // trigger slide
-                                core.triggerSlide.call(url.children('h2')[0], e);
-                            }
-                        });
-                    }
-
-                    // pause on hover (can't use custom events with $.hover())
-                    if (settings.pauseOnHover && settings.autoPlay) {
-                        elem
-                            .on('mouseover.liteAccordion', function() {
-                                core.playing && methods.stop();
-                            })
-                            .on('mouseout.liteAccordion', function() {
-                                !core.playing && methods.play(core.currentSlide);
-                            });
-                    }
-                },
-
-                // counter for autoPlay (zero index firstSlide on init)
-                currentSlide : settings.firstSlide - 1,
-
-                // next slide index
-                nextSlide : function(index) {
-                    var next = index + 1 || core.currentSlide + 1;
-
-                    // closure
-                    return function() {
-                        return next++ % slideLen;
+            // trigger slide animation
+            triggerSlide : function(e) {
+                var $this = $(this),
+                    tab = {
+                        elem : $this,
+                        index : header.index($this),
+                        next : $this.next(),
+                        prev : $this.parent().prev().children('h2'),
+                        parent : $this.parent()
                     };
-                },
 
-                // holds interval counter
-                playing : 0,
+                                    // update core.currentSlide
+                core.currentSlide = tab.index;
 
-                slideAnimCompleteFlag : false,
+                // reset onSlideAnimComplete callback flag
+                core.slideAnimCompleteFlag = false;
 
-                // trigger slide animation
-                triggerSlide : function(e) {
-                    var $this = $(this),
-                        tab = {
-                            elem : $this,
-                            index : header.index($this),
-                            next : $this.next(),
-                            prev : $this.parent().prev().children('h2'),
-                            parent : $this.parent()
-                        };
+                // trigger callback in context of sibling div (jQuery wrapped)
+                settings.onTriggerSlide.call(tab.next, $this);
 
-                    // current hash not correct?
-                    if (settings.linkable && tab.parent.attr('data-slide-name')) {
-                        if (tab.parent.attr('data-slide-name') !== window.location.hash.split('#')[1]) {
-                            // exit early and try again (prevents double trigger (issue #60))
-                            return window.location.hash = '#' + tab.parent.attr('data-slide-name');
-                        }
-                    }
+                // animate
+                if ($this.hasClass('selected') && $this.position().left < slideWidth / 2) {
+                    // animate single selected tab
+                    core.animSlide.call(tab);
+                } else {
+                    // animate groups
+                    core.animSlideGroup(tab);
+                }
 
-                    // update core.currentSlide
-                    core.currentSlide = tab.index;
+                // stop autoplay, reset current slide index in core.nextSlide closure
+                if (settings.autoPlay) {
+                    methods.stop();
+                    methods.play(header.index(header.filter('.selected')));
+                }
+            },
 
-                    // reset onSlideAnimComplete callback flag
-                    core.slideAnimCompleteFlag = false;
+            animSlide : function(triggerTab) {
+                var _this = this;
 
-                    // trigger callback in context of sibling div (jQuery wrapped)
-                    settings.onTriggerSlide.call(tab.next, $this);
+                // set pos for single selected tab
+                if (typeof this.pos === 'undefined') this.pos = slideWidth;
 
-                    // animate
-                    if ($this.hasClass('selected') && $this.position().left < slideWidth / 2) {
-                        // animate single selected tab
-                        core.animSlide.call(tab);
-                    } else {
-                        // animate groups
-                        core.animSlideGroup(tab);
-                    }
+                // remove, then add selected class
+                header.removeClass('selected').filter(this.elem).addClass('selected');
 
-                    // stop autoplay, reset current slide index in core.nextSlide closure
-                    if (settings.autoPlay) {
-                        methods.stop();
-                        methods.play(header.index(header.filter('.selected')));
-                    }
-                },
-
-                animSlide : function(triggerTab) {
-                    var _this = this;
-
-                    // set pos for single selected tab
-                    if (typeof this.pos === 'undefined') this.pos = slideWidth;
-
-                    // remove, then add selected class
-                    header.removeClass('selected').filter(this.elem).addClass('selected');
-
-                    // if slide index not zero
-                    if (!!this.index) {
-                        this.elem
-                            .add(this.next)
-                            .stop(true)
-                            .animate({
-                                left : this.pos + this.index * settings.headerWidth
-                            },
-                                settings.slideSpeed,
-                                settings.easing,
-                                function() {
-                                    // flag ensures that fn is only called one time per triggerSlide
-                                    if (!core.slideAnimCompleteFlag) {
-                                        // trigger onSlideAnimComplete callback in context of sibling div (jQuery wrapped)
-                                        settings.onSlideAnimComplete.call(triggerTab ? triggerTab.next : _this.prev.next());
-                                        core.slideAnimCompleteFlag = true;
-                                    }
-                                });
-
-                            // remove, then add selected class
-                            header.removeClass('selected').filter(this.prev).addClass('selected');
-
-                    }
-                },
-
-                // animates left and right groups of slides
-                animSlideGroup : function(triggerTab) {
-                    var group = ['left', 'right'];
-
-                    $.each(group, function(index, side) {
-                        var filterExpr, left;
-
-                        if (side === 'left')  {
-                            filterExpr = ':lt(' + (triggerTab.index + 1) + ')';
-                            left = 0;
-                        } else {
-                            filterExpr = ':gt(' + triggerTab.index + ')';
-                            left = slideWidth;
-                        }
-
-                        slides
-                            .filter(filterExpr)
-                            .children('h2')
-                            .each(function() {
-                                var $this = $(this),
-                                    tab = {
-                                        elem : $this,
-                                        index : header.index($this),
-                                        next : $this.next(),
-                                        prev : $this.parent().prev().children('h2'),
-                                        pos : left
-                                    };
-
-                                // trigger item anim, pass original trigger context for callback fn
-                                core.animSlide.call(tab, triggerTab);
+                // if slide index not zero
+                if (!!this.index) {
+                    this.elem
+                        .add(this.next)
+                        .stop(true)
+                        .animate({
+                            left : this.pos + this.index * settings.headerWidth
+                        },
+                            settings.slideSpeed,
+                            settings.easing,
+                            function() {
+                                // flag ensures that fn is only called one time per triggerSlide
+                                if (!core.slideAnimCompleteFlag) {
+                                    // trigger onSlideAnimComplete callback in context of sibling div (jQuery wrapped)
+                                    settings.onSlideAnimComplete.call(triggerTab ? triggerTab.next : _this.prev.next());
+                                    core.slideAnimCompleteFlag = true;
+                                }
                             });
 
-                    });
+                        // remove, then add selected class
+                        header.removeClass('selected').filter(this.prev).addClass('selected');
 
-                    // remove, then add selected class
-                    header.removeClass('selected').filter(triggerTab.elem).addClass('selected');
-                },
-
-                init : function() {
-
-
-                    // init styles and events
-                    core.setStyles();
-                    core.bindEvents();
-
-                    // check slide speed is not faster than cycle speed
-                    if (settings.cycleSpeed < settings.slideSpeed) settings.cycleSpeed = settings.slideSpeed;
-
-                    // init autoplay
-                    settings.autoPlay && methods.play();
                 }
-            };
+            },
+
+            // animates left and right groups of slides
+            animSlideGroup : function(triggerTab) {
+                var group = ['left', 'right'];
+
+                $.each(group, function(index, side) {
+                    var filterExpr, left;
+
+                    if (side === 'left')  {
+                        filterExpr = ':lt(' + (triggerTab.index + 1) + ')';
+                        left = 0;
+                    } else {
+                        filterExpr = ':gt(' + triggerTab.index + ')';
+                        left = slideWidth;
+                    }
+
+                    slides
+                        .filter(filterExpr)
+                        .children('h2')
+                        .each(function() {
+                            var $this = $(this),
+                                tab = {
+                                    elem : $this,
+                                    index : header.index($this),
+                                    next : $this.next(),
+                                    prev : $this.parent().prev().children('h2'),
+                                    pos : left
+                                };
+
+                            // trigger item anim, pass original trigger context for callback fn
+                            core.animSlide.call(tab, triggerTab);
+                        });
+
+                });
+
+                // remove, then add selected class
+                header.removeClass('selected').filter(triggerTab.elem).addClass('selected');
+            },
+
+            init : function() {
+
+
+                // init styles and events
+                core.setStyles();
+                core.bindEvents();
+
+                // check slide speed is not faster than cycle speed
+                if (settings.cycleSpeed < settings.slideSpeed) settings.cycleSpeed = settings.slideSpeed;
+
+                // init autoplay
+                settings.autoPlay && methods.play();
+            }
+        };
 
         // init plugin
         core.init();
