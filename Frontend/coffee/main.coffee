@@ -10,11 +10,11 @@ fs = require 'fs'
 cproc = require 'child_process'
 helpers = require './helpers'
 
+$ = window.$
+
 settings = JSON.parse(fs.readFileSync('../settings.json'))
 settings.leftColour = helpers.hexToHsl(settings.leftColour)
 settings.rightColour = helpers.hexToHsl(settings.rightColour)
-
-$ = window.$
 
 keys = settings.keys
 # Parse named keys to keycodes.
