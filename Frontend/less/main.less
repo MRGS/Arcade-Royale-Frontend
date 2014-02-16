@@ -1,0 +1,87 @@
+@import "fonts";
+
+body {
+	font-family: Lato, Arial, sans-serif;
+	text-rendering: optimizeLegibility;
+	color: #000;
+	margin: 0;
+	overflow: hidden;
+}
+
+h1 { 
+	color: #000;
+	font-family: CodePro;
+	font-weight: normal;
+	font-size: 50px;
+}
+
+/* Vertical headers. */
+.slide > h2 {
+	color: white;
+	line-height: 170%
+}
+
+.slidecontent {
+	h2 { 
+		color: #eee;
+		font-family: Lato;
+		font-weight: 300;
+		font-size: 31px;
+
+		&.desc-en {
+			float: left;
+			text-align: left;
+		}
+
+		&.desc-fr {
+			float: right;
+			text-align: right;
+		}
+	}
+
+	padding-top: 40px;
+	padding-right: 5px;
+	text-align: center;
+}
+
+.screenshot {
+	width: 100%;
+	padding-top: 15px;
+	padding-bottom: 20px;
+	clear: both;
+}
+
+#infoslide {
+	.bigheader {
+		float: left;
+		text-align: right;
+		color: #000;
+		font-family: CodePro;
+		font-weight: normal;
+		font-size: 150px;
+		letter-spacing: -0.03em;
+
+		&#line1 {
+			margin-top: -0.05em;
+			margin-bottom: 0em;
+			line-height: 1em;
+		}
+
+		&#line2 {
+			margin-top: 0em;
+			margin-bottom: 0em;
+			line-height: 0.8em;
+		}
+	}
+	
+	h3 {
+		font-weight: 300;
+		text-align: left;
+		font-size: 26px;
+	}
+
+	.slidecontent {
+		padding-top: 180px;
+		background: rgb(232, 232, 232);
+	}
+}

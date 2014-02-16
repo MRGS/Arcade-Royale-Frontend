@@ -1,5 +1,3 @@
-'use strict'
-
 ###
 Arcade Royale Launcher
 Hello hello. 2014.

@@ -1,0 +1,86 @@
+@charset 'utf-8';
+/*************************************************!
+*
+*   project:    liteAccordion - a horizontal accordion plugin for jQuery
+*   author:     Nicola Hibbert
+*   url:        http://nicolahibbert.com/liteaccordion-v2/
+*   demo:       http://www.nicolahibbert.com/demo/liteAccordion/
+*
+*   Version:    2.2.0
+*   Copyright:  (c) 2010-2013 Nicola Hibbert
+*   Licence:    MIT
+*
+**************************************************/
+/****************************************** Core */
+
+.liteAccordion {
+    text-align: left;
+    font-size: 16px;
+    line-height: 24px;
+    font: 'Helvetica Neue', Verdana, Arial, sans-serif;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-tap-highlight-color: transparent;
+
+    > ol {
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        > li {
+            list-style-type: none
+        }
+    }
+
+    .slide {
+        > h2 {
+            overflow: hidden;
+            font-family: CodePro;
+            font-weight: 300;
+            font-size: 60px;
+            margin: 0;
+            z-index: 100;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            -webkit-backface-visibility: hidden; /* fixes chrome bug */
+            -webkit-transform: translateX(-100%) rotate(-90deg);
+            -webkit-transform-origin: right top;
+            transform: translateX(-100%) rotate(-90deg);
+            transform-origin: right top;
+
+            span {
+                display: block;
+                padding-left: 25px;
+                text-align: left;
+                height: 90%;
+                margin-top: 0px;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            b {
+                display: inline-block;
+                position: absolute;
+                top: 13%;
+                left: 10%;
+                text-align: center;
+                -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            &:hover { cursor: pointer }
+        }
+
+        > div {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            z-index: 10;
+            overflow: hidden;
+            background: white;
+        }
+    }
+}
