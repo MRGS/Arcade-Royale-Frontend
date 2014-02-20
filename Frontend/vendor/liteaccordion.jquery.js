@@ -32,6 +32,9 @@
             easing : 'swing',                       // custom easing function
 
             theme : 'basic',                        // basic, dark, light, or stitch
+
+            innerPaddingLeft : 15,
+            innerPaddingRight : 20,
         },
 
         // merge defaults with options in new settings object
@@ -173,8 +176,12 @@
                         .css('left', left)
                         .width(settings.containerHeight)
                         .next()
-                            .width(slideWidth - offset)
-                            .css({ left : left, paddingLeft : settings.headerWidth });
+                            .width(slideWidth - offset  - settings.innerPaddingLeft - settings.innerPaddingRight)
+                            .css({
+                                left : left,
+                                paddingLeft : settings.headerWidth + settings.innerPaddingLeft,
+                                paddingRight : settings.innerPaddingRight,
+                            });
                 });
             },
 
