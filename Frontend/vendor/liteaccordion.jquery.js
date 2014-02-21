@@ -31,8 +31,6 @@
             cycleSpeed : 6000,                      // time between slide cycles
             easing : 'swing',                       // custom easing function
 
-            theme : 'basic',                        // basic, dark, light, or stitch
-
             innerPaddingLeft : 15,
             innerPaddingRight : 20,
         },
@@ -134,12 +132,11 @@
 
             // set style properties
             setStyles : function() {
-                // set container height and width, theme and corner style
+                // set container height and width
                 elem
                     .width(settings.containerWidth)
                     .height(settings.containerHeight)
                     .addClass('liteAccordion')
-                    .addClass(settings.theme);
 
                 // set slide heights
                 slides
