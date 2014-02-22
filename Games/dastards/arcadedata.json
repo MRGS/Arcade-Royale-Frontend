@@ -2,6 +2,13 @@
 	"title": "Space Dastards",
 	"author": "Sauropod Studio and Friends",
 	"url": "http://www.sauropodstudio.com/",
-	"description": "Be a dastard.",
-	"description_fr": "Soyez un dâtard."
+	"description_en": "Be a dastard.",
+	"description_fr": "Soyez un dâtard.",
+	"players" : "1-4",
+	"controls" : [
+		{
+			"control" : "S",
+			"description" : "Steer / Diriger"
+		}
+	]
 }

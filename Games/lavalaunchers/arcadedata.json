@@ -1,7 +1,22 @@
 {
 	"title": "Lava Launchers",
 	"author": "Alicia Fortier",
-	"description": "Stay cool.",
+	"description_en": "Stay cool.",
 	"description_fr": "Gardez votre sang-froid.",
+	"players" : "2-4",
+	"controls" : [
+		{
+			"control" : "S",
+			"description" : "Turn / Direction"
+		},
+		{
+			"control" : "A",
+			"description" : "Move / Mouvement"
+		},
+		{
+			"control" : "B",
+			"description" : "Blast / Feu"
+		}
+	],
 	"args": []
 }

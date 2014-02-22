@@ -1,7 +1,13 @@
 {
 	"title": "Super Punchball",
 	"author": "Neverpants",
-	"description": "Punch. Ball.",
+	"description_en": "Punch. Ball.",
 	"description_fr": "Poum. Boum.",
-	"args": []
+	"players" : "2-4",
+	"controls" : [
+		{
+			"control" : "A/B",
+			"description" : "Punch / Pogner"
+		}
+	]
 }

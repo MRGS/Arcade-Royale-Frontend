@@ -2,6 +2,21 @@
 	"title": "Thrustburst Arcade",
 	"author": "Umlautgames",
 	"url": "http://umlautgames.net/",
-	"description": "Shoot the hard core.",
-	"description_fr": "Ciblez le noyeau."
+	"description_en": "Shoot the hard core.",
+	"description_fr": "Ciblez le noyeau.",
+	"players" : "1-2",
+	"controls" : [
+		{
+			"control" : "S",
+			"description" : "Thrust / Propulsion"
+		},
+		{
+			"control" : "A",
+			"description" : "Laser"
+		},
+		{
+			"control" : "B",
+			"description" : "Shield / Bouclier"
+		}
+	]
 }
