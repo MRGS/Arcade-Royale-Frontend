@@ -1,6 +1,7 @@
 {
 	"title": "Capsize",
 	"author": "Carolyn Jong and Joachim Despland",
-	"description": "Financial meltdown.",
+	"description_en": "Financial meltdown.",
 	"description_fr": "Crise sur la banquise.",
-	"args": []}
+	"args": []
+}

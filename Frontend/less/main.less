@@ -28,6 +28,7 @@ h1 {
 		font-family: Lato;
 		font-weight: 300;
 		font-size: 31px;
+		margin: 0.4em 0;
 
 		&.desc-en {
 			float: left;
@@ -86,11 +87,13 @@ h1 {
 	}
 }
 
-.player {
+.players {
+	margin-bottom: 30px;
+}
+
+.player-icon {
 	background-image: url("../img/player-icon.svg");
-	// background: url("../img/player-icon.svg") no-repeat center center;
 	background-size: contain;
-	// background-repeat: no-repeat;
 	width: 25px;
 	height: 55px;
 	display: inline-block;
@@ -99,8 +102,8 @@ h1 {
 	vertical-align: middle;
 }
 
-.player-shift {
-	.player;
+.player-icon-shift {
+	.player-icon;
 	margin-bottom: 10px;
 }
 
@@ -113,4 +116,66 @@ h1 {
 	display: inline-block;
 	padding: 0 10px;
 	margin: 0;
+}
+
+.controls {
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	-webkit-justify-content: space-around;
+}
+
+.control-set {
+	-webkit-flex-direction: column;
+}
+
+.controls-buttons {
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	margin-bottom: 10px;
+}
+
+.controls-button() {
+	background-size: contain;
+	width: 60px;
+	height: 60px;
+	-webkit-align-self: center;
+}
+
+.controls-button-a {
+	.controls-button;
+	background-image: url("../img/controls-button-a.svg");
+}
+
+.controls-button-b {
+	.controls-button;
+	background-image: url("../img/controls-button-b.svg");
+}
+
+.controls-button-stick {
+	.controls-button;
+}
+
+.controls-button-text {
+	color: #1E1E1E;
+	font-family: CodePro;
+	font-weight: normal;
+	font-size: 25px;
+	-webkit-align-self: center;
+	padding: 0 10px;
+	margin: 0;
+}
+
+.controls-desc {
+	font-size: 25px;
+	font-weight: 300;
+}
+
+.controls-desc-en {
+	.controls-desc;
+	float: left;
+}
+
+.controls-desc-fr {
+	.controls-desc;
+	float: right;
 }

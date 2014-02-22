@@ -87,7 +87,7 @@ $ ->
             <li id="slide#{ i }">
                 <h2><span>#{ game.title }</span></h2>
                 <div class="slidecontent">
-                    <h2 class="desc-en">#{ game.description }</h2>
+                    <h2 class="desc-en">#{ game.description_en }</h2>
                     <h2 class="desc-fr">#{ game.description_fr }</h2>
                 </div>
             </li>
@@ -104,66 +104,87 @@ $ ->
             )
 
         if game.players?
+            celem = elem.append('<div class="players"></div>').find(".players:last-child")
             pstr = game.players
             for i in [0...pstr.length]
                 c = pstr.charAt(i)
                 switch
                     when !isNaN(parseFloat(c)) and isFinite(c)
                         for j in [1..parseInt(c)]
-                            className = if parseInt(c) is 4 and ((j-1) % 2) == 1 then "player-shift" else "player"
-                            elem.append("<div class=\"#{ className }\"></div>")
+                            className = if parseInt(c) is 4 and ((j-1) % 2) == 1 then "player-icon-shift" else "player-icon"
+                            celem.append("<div class=\"#{ className }\"></div>")
                     when c is 'v'
-                        elem.append('<div class="player-text">vs.</div>')
+                        celem.append('<div class="player-text">vs.</div>')
                     when c is '-'
-                        elem.append('<div class="player-text">-</div>')
+                        celem.append('<div class="player-text">-</div>')
                     when c is ' '
-                        elem.append('<div class="player-text"> </div>')
+                        celem.append('<div class="player-text"> </div>')
                     when c is '?'
-                        elem.append('<div class="player-text">?</div>')
+                        celem.append('<div class="player-text">?</div>')
                     else
                         console.log('Launcher: unrecognized characters in player definition for ' + game.title + ": '" + c + "'")
 
-        celem = elem
-        parseControls = (o) ->
-            celem.append('<div class="controls">Hi</div>')
-            celem = celem.find(".controls")
-            for k, v of o
-                switch k
-                    when 'container'
-                        parseControls(v)
-                    when 'label'
-                        celem.append("<div class=\"controls-label\">#{ v }</div>")
-                    when 'controls'
-                        if Array.isArray(v)
-                            for button in v
-                                celem.append("<div class=\"controls-button-#{ button.toLowerCase() }\"></div>")
+        # Grossss. Ugly, not super-robust.
+        parseControls = (o, el) ->
+            if Array.isArray(o)
+                for c in game.controls
+                    el.append('<div class="control-set"></div>')
+                    parseControls(c, el.find(".control-set:last-child"))
+            else if $.isPlainObject(o)
+                for k, v of o
+                    switch k
+                        when 'container'
+                            el.append('<div class="controls"></div>')
+                            parseControls(v, el.find(".controls:last-child"))
+                        when 'label'
+                            el.append("<div class=\"controls-label\">#{ v }</div>")
+                        when 'control'
+                            if v.length > 1
+                                cel = el.append("<div class=\"controls-buttons\"></div>").find(".controls-buttons:last-child")
+                                for i in [0...v.length]
+                                    c = v.charAt(i)
+                                    parseButton(c, cel)
+                            else
+                                el.append("<div class=\"controls-button-#{ v.toLowerCase() }\"></div>")
+                        when 'description'
+                            el.append("<div class=\"controls-desc\">#{ v }</div>")
+                        when 'description_en'
+                            el.append("<div class=\"controls-desc-en\">#{ v }</div>")
+                        when 'description_fr'
+                            el.append("<div class=\"controls-desc-fr\">#{ v }</div>")
                         else
-                            celem.append("<div class=\"controls-button-#{ v.toLowerCase() }\"></div>")
-                    when 'description'
-                        celem.append("<div class=\"controls-desc-en\">#{ v }</div>")
-                    when 'description_fr'
-                        celem.append("<div class=\"controls-desc-fr\">#{ v }</div>")
-                    else
-                        console.log('Launcher: unrecognized control identifier for ' + game.title + ": '" + k "'")
-
-        if game.controls?
-            if Array.isArray(game.controls)
-                for o in game.controls
-                    parseControls(o)
-            else if $.isPlainObject(game.controls)
-                    parseControls(game.controls)
+                            console.log('Launcher: unrecognized control identifier for ' + game.title + ": '" + k + "'")
             else
                 console.log("Launcher: can't parse controls")
 
+        # Hoo boy this is ugly. Quick job.
+        parseButton = (c, el) ->
+            switch c.toLowerCase()
+                when 'a'
+                    el.append("<div class=\"controls-button-a\"></div>")
+                when 'b'
+                    el.append("<div class=\"controls-button-b\"></div>")
+                when 's'
+                    el.append("<div class=\"controls-button-stick\"></div>")
+                when '/'
+                    el.append("<div class=\"controls-button-text\">or/ou</div>")
+                when '+'
+                    el.append("<div class=\"controls-button-text\">+</div>")
+                else
+                    console.log('Launcher: unrecognized characters in controls definition for ' + game.title + ": '" + c + "'")
 
+        if game.controls?
+            elem.append('<div class="controls"></div>')
+            parseControls(game.controls, elem.find(".controls:last-child"))
 
-        if game.url?
-            elem.qrcode({
-                height: 180
-                width: 180
-                color: '#fff'
-                text: game.url
-            })
+        # if game.url?
+        #     elem.qrcode({
+        #         height: "150"
+        #         width: "150"
+        #         # color: '#fff'
+        #         text: game.url
+        #     })
+
 
     # Generate the styles for each slide...
     style = for i in [0..games.length]
