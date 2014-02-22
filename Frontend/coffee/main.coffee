@@ -23,20 +23,20 @@ keys = settings.keys
 for k, v of keys
     if typeof(v) is "object"
         for k2, v2 of v
-            if helpers.keyNameToCode[v2] isnt undefined
+            if helpers.keyNameToCode[v2]?
                 keys[k][k2] = helpers.keyNameToCode[v2]
             else
-                console.log "Unknown key: '"+v2+"'"
+                console.log "Launcher: unknown key: '"+v2+"'"
     else
-        if helpers.keyNameToCode[v] isnt undefined
+        if helpers.keyNameToCode[v]?
             keys[k] = helpers.keyNameToCode[v]
         else
-            console.log "Unknown key: '"+v+"'"
+            console.log "Launcher: unknown key: '"+v+"'"
 
-keys.anyLeft = (v.left for k, v of keys when v.left isnt undefined)
-keys.anyRight = (v.right for k, v of keys when v.right isnt undefined)
-keys.anyA = (v.a for k, v of keys when v.a isnt undefined)
-keys.anyB = (v.b for k, v of keys when v.b isnt undefined)
+keys.anyLeft = (v.left for k, v of keys when v.left?)
+keys.anyRight = (v.right for k, v of keys when v.right?)
+keys.anyA = (v.a for k, v of keys when v.a?)
+keys.anyB = (v.b for k, v of keys when v.b?)
 
 
 games = []
@@ -53,13 +53,13 @@ for file in filenames
                 if fs.existsSync(path + '/' + game.exec_name)
                     game.exec_name = path + '/' + game.exec_name
                 else
-                    console.log("Warning: executable name not found at " + path + '/' + game.exec_name)
+                    console.log("Launcher: executable name not found at " + path + '/' + game.exec_name)
             else
                 exes = fs.readdirSync(path).filter((elem) -> elem.indexOf('.exe', elem.length - '.exe'.length) isnt -1)
                 if exes.length is 1
                     game.exec_name = path + '/' + exes[0]
                 else
-                    console.log("Warning: can't find a candidate exe in " + path)
+                    console.log("Launcher: can't find a candidate exe in " + path)
 
             # now let's find a screenshot.
             for ext in ['png', 'gif', 'jpg']
@@ -69,7 +69,7 @@ for file in filenames
 
             games.push game
         else
-            console.log("Warning: no arcade data file found at " + path)
+            console.log("Launcher: no arcade data file found at " + path)
 
 # Alpha sort.
 games.sort (a, b) ->
@@ -103,6 +103,60 @@ $ ->
                 """
             )
 
+        if game.players?
+            pstr = game.players
+            for i in [0...pstr.length]
+                c = pstr.charAt(i)
+                switch
+                    when !isNaN(parseFloat(c)) and isFinite(c)
+                        for j in [1..parseInt(c)]
+                            className = if parseInt(c) is 4 and ((j-1) % 2) == 1 then "player-shift" else "player"
+                            elem.append("<div class=\"#{ className }\"></div>")
+                    when c is 'v'
+                        elem.append('<div class="player-text">vs.</div>')
+                    when c is '-'
+                        elem.append('<div class="player-text">-</div>')
+                    when c is ' '
+                        elem.append('<div class="player-text"> </div>')
+                    when c is '?'
+                        elem.append('<div class="player-text">?</div>')
+                    else
+                        console.log('Launcher: unrecognized characters in player definition for ' + game.title + ": '" + c + "'")
+
+        celem = elem
+        parseControls = (o) ->
+            celem.append('<div class="controls">Hi</div>')
+            celem = celem.find(".controls")
+            for k, v of o
+                switch k
+                    when 'container'
+                        parseControls(v)
+                    when 'label'
+                        celem.append("<div class=\"controls-label\">#{ v }</div>")
+                    when 'controls'
+                        if Array.isArray(v)
+                            for button in v
+                                celem.append("<div class=\"controls-button-#{ button.toLowerCase() }\"></div>")
+                        else
+                            celem.append("<div class=\"controls-button-#{ v.toLowerCase() }\"></div>")
+                    when 'description'
+                        celem.append("<div class=\"controls-desc-en\">#{ v }</div>")
+                    when 'description_fr'
+                        celem.append("<div class=\"controls-desc-fr\">#{ v }</div>")
+                    else
+                        console.log('Launcher: unrecognized control identifier for ' + game.title + ": '" + k "'")
+
+        if game.controls?
+            if Array.isArray(game.controls)
+                for o in game.controls
+                    parseControls(o)
+            else if $.isPlainObject(game.controls)
+                    parseControls(game.controls)
+            else
+                console.log("Launcher: can't parse controls")
+
+
+
         if game.url?
             elem.qrcode({
                 height: 180
@@ -125,12 +179,14 @@ $ ->
 
     # Now set up dat accordion.
     la = $("#mainContainer").liteAccordion({
-        "easing":"easeOutCubic",
-        "containerWidth": $(window).width(),
-        "containerHeight": $(window).height(),
-        "headerWidth":80,
-        "slideSpeed":400}
-    ).data('liteAccordion')
+        "easing":"easeOutCubic"
+        "containerWidth": $(window).width()
+        "containerHeight": $(window).height()
+        "headerWidth": 80
+        "slideSpeed": 400
+        # "onTriggerSlide": (e) ->
+        # "onSlideAnimComplete": ->
+    }).data('liteAccordion')
 
     # Handle keypresses
     $(window).keydown (e) ->
@@ -148,8 +204,10 @@ $ ->
                 if games[ind - 1].exec_name?
                     cproc.execFile(games[ind - 1].exec_name)
 
-    setInterval( ->
-        now = process.uptime()
-        if now > lastKeypress + 15
-            la.play() # yeah, this call'll fire every second. got a problem, bub?
-    , 1000)
+    la.goto(5)
+
+    # setInterval( ->
+    #     now = process.uptime()
+    #     if now > lastKeypress + 15
+    #         la.play() # yeah, this call'll fire every second. got a problem, bub?
+    # , 1000)

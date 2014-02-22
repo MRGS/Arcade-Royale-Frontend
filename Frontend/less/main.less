@@ -46,7 +46,7 @@ h1 {
 
 .screenshot {
 	width: 100%;
-	padding-top: 15px;
+	padding-top: 0px;
 	padding-bottom: 20px;
 	clear: both;
 }
@@ -84,4 +84,33 @@ h1 {
 		padding-top: 180px;
 		background: rgb(232, 232, 232);
 	}
+}
+
+.player {
+	background-image: url("../img/player-icon.svg");
+	// background: url("../img/player-icon.svg") no-repeat center center;
+	background-size: contain;
+	// background-repeat: no-repeat;
+	width: 25px;
+	height: 55px;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	vertical-align: middle;
+}
+
+.player-shift {
+	.player;
+	margin-bottom: 10px;
+}
+
+.player-text {
+	color: #1E1E1E;
+	font-family: CodePro;
+	font-weight: normal;
+	font-size: 25px;
+	vertical-align: text-top;
+	display: inline-block;
+	padding: 0 10px;
+	margin: 0;
 }
