@@ -7,7 +7,7 @@
 	"players" : "2",
 	"controls" : [
 		{
-			"control" : "SS",
+			"control" : "SS SS",
 			"description_en" : "Each player uses two sticks.\nFlick them at the same time to attack!",
 			"description_fr" : "Chaque joueur utilise deux manches.\nBougez-les en même temps pour attaquer!"
 		}

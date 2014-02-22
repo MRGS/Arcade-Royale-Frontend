@@ -11,6 +11,7 @@ helpers = require './helpers'
 $ = window.$
 
 lastKeypress = 0
+locked = false
 
 settings = JSON.parse(fs.readFileSync('../settings.json'))
 settings.leftColour = helpers.hexToHsl(settings.leftColour)
@@ -173,6 +174,8 @@ $ ->
                     el.append("<div class=\"controls-button-text\">or/ou</div>")
                 when '+'
                     el.append("<div class=\"controls-button-text\">+</div>")
+                when ' '
+                    el.append("<div class=\"controls-button-text\"> </div>")
                 else
                     console.log('Launcher: unrecognized characters in controls definition for ' + game.title + ": '" + c + "'")
 
@@ -214,6 +217,8 @@ $ ->
 
     # Handle keypresses
     $(window).keydown (e) ->
+        if locked
+            return 0
         lastKeypress = process.uptime()
         la.stop()
         if e.which is keys.home
@@ -226,10 +231,30 @@ $ ->
             ind = la.current()
             if ind isnt 0
                 if games[ind - 1].exec_name?
-                    cproc.execFile(games[ind - 1].exec_name)
+                    gameproc = cproc.execFile(games[ind - 1].exec_name)
+                    
+                    locked = true
+                    clearInterval(am_timer)
 
-    setInterval( () ->
+                    $(".fader").fadeIn(600, () ->
+                        $(".mainContainer").hide()
+                    )
+                    
+                    gameproc.on('exit', () ->
+                        locked = false
+                        lastKeypress = process.uptime()
+                        am_timer = setInterval(doAttractMode, 1000)
+
+                        $(".mainContainer").show()
+                        $(".fader").fadeOut(600)
+                    )
+
+    doAttractMode = () ->
         now = process.uptime()
         if now > lastKeypress + 15
-            la.play() # yeah, this call'll fire every second. got a problem, bub?
-    , 1000)
+            # note that we're only letting the accordion know it should play
+            # here, not actually incrementing the slide. this could probably
+            # be a bit more elegant...
+            la.play()
+    
+    am_timer = setInterval(doAttractMode, 1000)
