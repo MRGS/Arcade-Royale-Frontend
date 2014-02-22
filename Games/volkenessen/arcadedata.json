@@ -3,5 +3,13 @@
 	"author": "Les Collégiennes",
 	"url": "http://wiki.xxiivv.com/025",
 	"description_en": "Box boxing.",
-	"description_fr": ""
+	"description_fr": "",
+	"players" : "2",
+	"controls" : [
+		{
+			"control" : "SS",
+			"description_en" : "Each player uses two sticks.\nFlick them at the same time to attack!",
+			"description_fr" : "Chaque joueur utilise deux manches.\nBougez-les en même temps pour attaquer!"
+		}
+	]
 }

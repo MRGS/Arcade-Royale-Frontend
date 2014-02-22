@@ -46,7 +46,13 @@ for file in filenames
     path = settings.baseDirectory + file
     if fs.statSync(path).isDirectory()
         if fs.existsSync(path + '/arcadedata.json')
-            game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'))
+            game = null
+            try
+                game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'))
+            catch e
+                console.log("Parsing error on " + path)
+                console.log(e)
+                continue
 
             # let's check/find our executable.
             if game.exec_name isnt undefined
@@ -139,13 +145,10 @@ $ ->
                         when 'label'
                             el.append("<div class=\"controls-label\">#{ v }</div>")
                         when 'control'
-                            if v.length > 1
-                                cel = el.append("<div class=\"controls-buttons\"></div>").find(".controls-buttons:last-child")
-                                for i in [0...v.length]
-                                    c = v.charAt(i)
-                                    parseButton(c, cel)
-                            else
-                                el.append("<div class=\"controls-button-#{ v.toLowerCase() }\"></div>")
+                            cel = el.append("<div class=\"controls-buttons\"></div>").find(".controls-buttons:last-child")
+                            for i in [0...v.length]
+                                c = v.charAt(i)
+                                parseButton(c, cel)
                         when 'description'
                             el.append("<div class=\"controls-desc\">#{ v }</div>")
                         when 'description_en'
@@ -177,13 +180,13 @@ $ ->
             elem.append('<div class="controls"></div>')
             parseControls(game.controls, elem.find(".controls:last-child"))
 
-        # if game.url?
-        #     elem.qrcode({
-        #         height: "150"
-        #         width: "150"
-        #         # color: '#fff'
-        #         text: game.url
-        #     })
+        if game.url?
+            elem.qrcode({
+                render: 'image'
+                size: 120
+                fill: '#222'
+                text: game.url
+            })
 
 
     # Generate the styles for each slide...
@@ -191,8 +194,8 @@ $ ->
         t = i / games.length
         col = helpers.hslLerp(settings.leftColour, settings.rightColour, t)
         """
-        #slide#{ i } h2 { background-color: hsl(#{ col.h }, #{ col.s }%, #{ col.l }%) }
-        #slide#{ i } div { background-color: hsl(#{ col.h }, #{ col.s }%, #{ col.l }%) }
+        #slide#{ i } > h2 { background-color: hsl(#{ col.h }, #{ col.s }%, #{ col.l }%) }
+        #slide#{ i } > div { background-color: hsl(#{ col.h }, #{ col.s }%, #{ col.l }%) }
         """
 
     # ...And stick 'em in our document
@@ -225,10 +228,8 @@ $ ->
                 if games[ind - 1].exec_name?
                     cproc.execFile(games[ind - 1].exec_name)
 
-    la.goto(5)
-
-    # setInterval( ->
-    #     now = process.uptime()
-    #     if now > lastKeypress + 15
-    #         la.play() # yeah, this call'll fire every second. got a problem, bub?
-    # , 1000)
+    setInterval( () ->
+        now = process.uptime()
+        if now > lastKeypress + 15
+            la.play() # yeah, this call'll fire every second. got a problem, bub?
+    , 1000)

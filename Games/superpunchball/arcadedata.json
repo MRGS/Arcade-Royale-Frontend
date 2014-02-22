@@ -3,7 +3,7 @@
 	"author": "Neverpants",
 	"description_en": "Punch. Ball.",
 	"description_fr": "Poum. Boum.",
-	"players" : "1-2v1-2",
+	"players" : "2-4",
 	"controls" : [
 		{
 			"control" : "A/B",

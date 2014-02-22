@@ -3,5 +3,13 @@
 	"author": "No Fun Games",
 	"url": "http://paxbritannica.henk.ca/",
 	"description_en": "Undersea strategy.",
-	"description_fr": "Stratégie sousmarine."
+	"description_fr": "Stratégie sousmarine.",
+	"players" : "1-4",
+	"controls" : [
+		{
+			"control" : "A/B",
+			"description_en" : "Hold to choose unit",
+			"description_fr" : "Enfoncer pour choisir une unité"
+		}
+	]
 }
