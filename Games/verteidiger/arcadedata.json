@@ -7,24 +7,25 @@
 	"players" : "4",
 	"controls" : [
 		{
-			"label" : "P1",
 			"control" : "A/B",
-			"description" : "Rotate left / Rotation à gauche"
-		},
-		{
-			"label" : "P2",
-			"control" : "A/B",
-			"description" : "Rotate right / Rotation à droite"
-		},
-		{
-			"label" : "P3",
-			"control" : "A/B",
-			"description" : "Fire missile / Lancer une missile"
-		},
-		{
-			"label" : "P4",
-			"control" : "A/B",
-			"description" : "Detonate missile / Faire détoner missile"
+			"container" : [
+				{
+					"label" : "P1",
+					"description" : "Rotate left\nRotation à gauche"
+				},
+				{
+					"label" : "P2",
+					"description" : "Rotate right\nRotation à droite"
+				},
+				{
+					"label" : "P3",
+					"description" : "Fire missile\nLancer une missile"
+				},
+				{
+					"label" : "P4",
+					"description" : "Detonate missile\nFaire détoner missile"
+				}
+			]
 		}
 	]
 }

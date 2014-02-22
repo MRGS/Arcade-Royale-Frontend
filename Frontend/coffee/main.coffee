@@ -133,15 +133,15 @@ $ ->
         # Grossss. Ugly, not super-robust.
         parseControls = (o, el) ->
             if Array.isArray(o)
-                for c in game.controls
+                for c in o
                     el.append('<div class="control-set"></div>')
                     parseControls(c, el.find(".control-set:last-child"))
             else if $.isPlainObject(o)
                 for k, v of o
                     switch k
                         when 'container'
-                            el.append('<div class="controls"></div>')
-                            parseControls(v, el.find(".controls:last-child"))
+                            cel = el.append('<div class="controls"></div>').find(".controls:last-child")
+                            parseControls(v, cel)
                         when 'label'
                             el.append("<div class=\"controls-label\">#{ v }</div>")
                         when 'control'
