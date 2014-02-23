@@ -119,7 +119,7 @@ $ ->
                     when !isNaN(parseFloat(c)) and isFinite(c)
                         for j in [1..parseInt(c)]
                             className = if parseInt(c) is 4 and ((j-1) % 2) == 1 then "player-icon-shift" else "player-icon"
-                            celem.append("<div class=\"#{ className }\"></div>")
+                            celem.append("<img class=\"#{ className }\" src=\"img/player-icon.svg\">")
                     when c is 'v'
                         celem.append('<div class="player-text">vs.</div>')
                     when c is '-'
@@ -165,11 +165,11 @@ $ ->
         parseButton = (c, el) ->
             switch c.toLowerCase()
                 when 'a'
-                    el.append("<div class=\"controls-button-a\"></div>")
+                    el.append("<img class=\"controls-button-a\" src=\"img/controls-button-a.svg\">")
                 when 'b'
-                    el.append("<div class=\"controls-button-b\"></div>")
+                    el.append("<img class=\"controls-button-b\" src=\"img/controls-button-b.svg\">")
                 when 's'
-                    el.append("<div class=\"controls-button-stick\"></div>")
+                    el.append("<img class=\"controls-button-stick\" src=\"img/controls-button-stick.svg\">")
                 when '/'
                     el.append("<div class=\"controls-button-text\">or/ou</div>")
                 when '+'
