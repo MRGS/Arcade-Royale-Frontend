@@ -92,7 +92,9 @@ $ ->
         $("#mainContainer ol").append(
             """
             <li id="slide#{ i }">
-                <h2><span>#{ game.title }</span></h2>
+                <div class="slideheader">
+                    <span class="gametitle">#{ game.title }</span>
+                </div>
                 <div class="slidecontent">
                     <h2 class="desc-en">#{ game.description_en }</h2>
                     <h2 class="desc-fr">#{ game.description_fr }</h2>

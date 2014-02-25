@@ -229,7 +229,7 @@
                         elem : $this,
                         index : header.index($this),
                         next : $this.next(),
-                        prev : $this.parent().prev().children('h2'),
+                        prev : $this.parent().prev().children('.slideheader'),
                         parent : $this.parent()
                     };
 
@@ -309,14 +309,14 @@
 
                     slides
                         .filter(filterExpr)
-                        .children('h2')
+                        .children('.slideheader')
                         .each(function() {
                             var $this = $(this),
                                 tab = {
                                     elem : $this,
                                     index : header.index($this),
                                     next : $this.next(),
-                                    prev : $this.parent().prev().children('h2'),
+                                    prev : $this.parent().prev().children('.slideheader'),
                                     pos : left
                                 };
 
