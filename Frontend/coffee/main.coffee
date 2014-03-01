@@ -7,6 +7,7 @@ MIT License.
 fs = require 'fs'
 cproc = require 'child_process'
 helpers = require './helpers'
+gui = global.window.nwDispatcher.requireNwGui()
 
 $ = window.$
 
@@ -214,8 +215,14 @@ $ ->
         "headerWidth": 80
         "slideSpeed": 400
         # "onTriggerSlide": (e) ->
+        #     $(this).css("display", "block")
         # "onSlideAnimComplete": ->
+        #     if not $(this).prev().hasClass("selected")
+        #         $(this).css("display", "none")
     }).data('liteAccordion')
+
+    # $(".slidecontent").css("display", "none")
+    # $(".slideheader.selected").next().css("display", "block")
 
     # Handle keypresses
     $(window).keydown (e) ->
@@ -223,6 +230,13 @@ $ ->
             return 0
         lastKeypress = process.uptime()
         la.stop()
+
+        if e.which is 122 #f11
+            gui.Window.get().reload(3)
+        if e.which is 123 #f12
+            win = gui.Window.get()
+            if not win.isDevToolsOpen()
+                win.showDevTools()
         if e.which is keys.home
             la.goto(0)
         else if e.which in keys.anyLeft
@@ -238,11 +252,11 @@ $ ->
                     locked = true
                     clearInterval(am_timer)
 
-                    $(".fader").fadeIn(600, () ->
+                    $(".fader").fadeIn(600, ->
                         $(".mainContainer").hide()
                     )
                     
-                    gameproc.on('exit', () ->
+                    gameproc.on('exit', ->
                         locked = false
                         lastKeypress = process.uptime()
                         am_timer = setInterval(doAttractMode, 1000)
@@ -251,7 +265,7 @@ $ ->
                         $(".fader").fadeOut(600)
                     )
 
-    doAttractMode = () ->
+    doAttractMode = ->
         now = process.uptime()
         if now > lastKeypress + 15
             # note that we're only letting the accordion know it should play
