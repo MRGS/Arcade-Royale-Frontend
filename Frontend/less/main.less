@@ -1,5 +1,12 @@
 @import "fonts";
 
+///////////////////
+
+@min-slide-width: 340px;
+@constrols-button-size: 60px;
+
+///////////////////
+
 body {
 	cursor: none !important;
 	font-family: Lato, Arial, sans-serif;
@@ -177,25 +184,29 @@ h1 {
 }
 
 .controls {
-	display: -webkit-flex;
-	-webkit-flex-direction: row;
-	-webkit-justify-content: space-around;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
 .control-set {
-	-webkit-flex-direction: column;
+	flex-direction: column;
+	* {
+		flex: none;
+	}
 }
 
 .controls-buttons {
-	display: -webkit-flex;
-	-webkit-flex-direction: row;
+	display: flex;
+	flex-direction: row;
 	margin-bottom: 10px;
+	justify-content: space-around;
 }
 
 .controls-button() {
 	width: 60px;
 	height: 60px;
-	-webkit-align-self: center;
+	align-self: center;
 }
 
 .controls-button-a {
@@ -209,7 +220,7 @@ h1 {
 .controls-button-stick {
 	width: 60px;
 	height: 104px;
-	-webkit-align-self: center;
+	align-self: center;
 }
 
 .controls-button-text {
@@ -217,7 +228,7 @@ h1 {
 	font-family: CodePro;
 	font-weight: normal;
 	font-size: 25px;
-	-webkit-align-self: center;
+	align-self: center;
 	padding: 0 10px;
 	margin: 0;
 }
@@ -225,7 +236,7 @@ h1 {
 .controls-desc {
 	font-size: 25px;
 	font-weight: 300;
-	-webkit-align-self: flex-end;
+	align-self: flex-end;
 }
 
 .controls-desc-en {
