@@ -1,0 +1,29 @@
+{
+  title: "Verteidiger"
+  author: "Kenny Backus"
+  url: "http://nihilocrat.tumblr.com/"
+  description_en: "Collaborative command."
+  description_fr: "Commandement collaboratif."
+  players: "4"
+  controls: [
+    control: "A/B"
+    container: [
+      {
+        label: "P1"
+        description: "Rotate left / Rotation à gauche"
+      }
+      {
+        label: "P2"
+        description: "Rotate right / Rotation à droite"
+      }
+      {
+        label: "P3"
+        description: "Fire missile / Lancer une missile"
+      }
+      {
+        label: "P4"
+        description: "Detonate missile / Faire détoner missile"
+      }
+    ]
+  ]
+}

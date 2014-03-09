@@ -1,0 +1,22 @@
+{
+  title: "SWØØØØRDS!"
+  author: "Kenny Backus"
+  url: "http://nihilocrat.tumblr.com/"
+  description_en: "You like sharp things?"
+  description_fr: "T'aimes-tu les objets tranchants?"
+  players: "1-4"
+  controls: [
+    {
+      control: "S"
+      description: "Move / Mouvement"
+    }
+    {
+      control: "A"
+      description: "Attack / Attaque"
+    }
+    {
+      control: "B"
+      description: "Guard / Défense"
+    }
+  ]
+}
