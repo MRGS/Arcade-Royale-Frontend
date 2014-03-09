@@ -4,7 +4,7 @@
 	"url": "http://wiki.xxiivv.com/025",
 	"description_en": "Box boxing.",
 	"description_fr": "Boxe de boètes.",
-	"players" : "2",
+	"players" : "1v1",
 	"controls" : [
 		{
 			"container" : [

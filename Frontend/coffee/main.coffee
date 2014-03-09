@@ -124,7 +124,7 @@ $ ->
                             className = if parseInt(c) is 4 and ((j-1) % 2) == 1 then "player-icon-shift" else "player-icon"
                             celem.append("<img class=\"#{ className }\" src=\"img/player-icon.svg\">")
                     when c is 'v'
-                        celem.append('<div class="player-text">vs.</div>')
+                        celem.append('<div class="player-text">vs</div>')
                     when c is '-'
                         celem.append('<div class="player-text">-</div>')
                     when c is ' '
@@ -186,13 +186,13 @@ $ ->
             elem.append('<div class="controls"></div>')
             parseControls(game.controls, elem.find(".controls:last-child"))
 
-        if game.url?
-            elem.qrcode({
-                render: 'image'
-                size: 120
-                fill: '#222'
-                text: game.url
-            })
+        # if game.url?
+        #     elem.qrcode({
+        #         render: 'image'
+        #         size: 120
+        #         fill: '#222'
+        #         text: game.url
+        #     })
 
 
     # Generate the styles for each slide...
