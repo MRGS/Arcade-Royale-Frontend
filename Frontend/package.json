@@ -14,7 +14,6 @@
     "fullscreen": true
   },
   "dependencies": {
-    "coffee-script": "~1.7.1",
-    "cson": "~1.4.5"
+    "coffee-script": "~1.7.1"
   }
 }
