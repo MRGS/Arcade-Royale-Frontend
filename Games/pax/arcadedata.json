@@ -8,8 +8,7 @@
 	"controls" : [
 		{
 			"control" : "A/B",
-			"description_en" : "Hold to choose unit",
-			"description_fr" : "Enfoncer pour choisir une unité"
+			"description" : "Hold to choose unit / Enfoncer pour choisir une unité"
 		}
 	]
 }

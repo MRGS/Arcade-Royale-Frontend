@@ -11,19 +11,19 @@
 			"container" : [
 				{
 					"label" : "P1",
-					"description" : "Rotate left\nRotation à gauche"
+					"description" : "Rotate left / Rotation à gauche"
 				},
 				{
 					"label" : "P2",
-					"description" : "Rotate right\nRotation à droite"
+					"description" : "Rotate right / Rotation à droite"
 				},
 				{
 					"label" : "P3",
-					"description" : "Fire missile\nLancer une missile"
+					"description" : "Fire missile / Lancer une missile"
 				},
 				{
 					"label" : "P4",
-					"description" : "Detonate missile\nFaire détoner missile"
+					"description" : "Detonate missile / Faire détoner missile"
 				}
 			]
 		}
