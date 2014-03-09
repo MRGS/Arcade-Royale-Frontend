@@ -7,15 +7,17 @@ MIT License.
 fs = require 'fs'
 cproc = require 'child_process'
 helpers = require './helpers'
+cseval = require('coffee-script').eval
+
+parseCSON = (path) ->
+    cseval(fs.readFileSync(path).toString())
+
 gui = global.window.nwDispatcher.requireNwGui()
 
 $ = window.$
 
 lastKeypress = 0
 locked = false
-
-parseCSON = (path) ->
-    require('coffee-script').eval(fs.readFileSync(path).toString())
 
 settings = parseCSON('../settings.cson')
 
