@@ -1,0 +1,18 @@
+{
+  title: "Capsize"
+  author: "Carolyn Jong & Joachim Despland"
+  description_en: "Financial meltdown."
+  description_fr: "Crise sur la banquise."
+  players: "1-4"
+  controls: [
+    {
+      control: "S"
+      description: "Move / Mouvement"
+    }
+    {
+      control: "A/B"
+      description: "Jump / Saut"
+    }
+  ]
+  args: []
+}

@@ -1,0 +1,18 @@
+{
+  title: "Toto Temple"
+  author: "Juicy Beast"
+  description_en: "Goat grabbers."
+  description_fr: "Bandits de boucs."
+  players: "2-4"
+  controls: [
+    {
+      control: "S"
+      description: "Move / Mouvement"
+    }
+    {
+      control: "A/B"
+      description: "Dash / Foncer"
+    }
+  ]
+  args: []
+}

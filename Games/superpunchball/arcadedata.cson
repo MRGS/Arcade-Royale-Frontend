@@ -1,0 +1,11 @@
+{
+  title: "Super Punchball"
+  author: "Studio Neverpants"
+  description_en: "Punch. Ball."
+  description_fr: "Poum. Boum."
+  players: "2-4"
+  controls: [
+    control: "A/B"
+    description: "Punch / Pogner"
+  ]
+}
