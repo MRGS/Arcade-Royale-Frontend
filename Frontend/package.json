@@ -3,11 +3,18 @@
   "name": "royale-launcher",
   "description": "Arcade Royale Launcher",
   "version": "0.1.0",
-  "keywords": [ "gams", "videogams" ],
+  "keywords": [
+    "gams",
+    "videogams"
+  ],
   "window": {
     "title": "Arcade Royale Launcher",
     "toolbar": false,
     "frame": false,
     "fullscreen": true
+  },
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "cson": "~1.4.5"
   }
 }
