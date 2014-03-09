@@ -153,7 +153,8 @@
                 var selected = header.filter('.selected');
 
                 // account for already selected slide
-                if (!selected.length) header.eq(settings.firstSlide - 1).addClass('selected');
+                if (!selected.length)
+                    header.eq(settings.firstSlide - 1).addClass('selected');
 
                 header.each(function(index) {
                     var $this = $(this),
@@ -163,9 +164,11 @@
 
                     // compensate for already selected slide on resize
                     if (selected.length) {
-                        if (index > header.index(selected)) left += slideWidth;
+                        if (index > header.index(selected))
+                            left += slideWidth;
                     } else {
-                        if (index >= settings.firstSlide) left += slideWidth;
+                        if (index >= settings.firstSlide)
+                            left += slideWidth;
                     }
 
                     // set each slide position

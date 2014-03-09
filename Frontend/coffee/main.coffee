@@ -214,6 +214,8 @@ $ ->
         "containerHeight": $(window).height()
         "headerWidth": 80
         "slideSpeed": 400
+        ## experimental optimization to hide non-visible slide content.
+        ## doesn't seem to noticeably affect performance.
         # "onTriggerSlide": (e) ->
         #     $(this).css("display", "block")
         # "onSlideAnimComplete": ->
