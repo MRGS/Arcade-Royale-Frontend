@@ -10,6 +10,10 @@ helpers = require './helpers'
 cseval = require('coffee-script').eval
 
 parseCSON = (path) ->
+    # node-webkit apparently doesn't support creating a sandboxed node context like this:
+    # cseval(fs.readFileSync(path).toString(), { sandbox: true })
+    # so let's just run it unsafe like this instead, at least until packages
+    # like cson/season support static, non-turing parsing?
     cseval(fs.readFileSync(path).toString())
 
 gui = global.window.nwDispatcher.requireNwGui()
