@@ -196,38 +196,40 @@
 
             // animates left and right groups of slides
             animSlideGroup : function(triggerTab) {
-                var group = ['left', 'right'];
 
-                $.each(group, function(index, side) {
-                    var filterExpr, left;
+                //Handle left side
+                slides
+                    .filter(':lt(' + (triggerTab.index + 1) + ')')
+                    .children('.slideheader')
+                    .each(function() {
+                        var $this = $(this);
+                        var tab = {
+                            elem : $this,
+                            index : header.index($this),
+                            next : $this.next(),
+                            prev : $this.parent().prev().children('.slideheader'),
+                            pos : 0
+                        };
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
 
-                    if (side === 'left')  {
-                        filterExpr = ':lt(' + (triggerTab.index + 1) + ')';
-                        left = 0;
-                    }
-                    else {
-                        filterExpr = ':gt(' + triggerTab.index + ')';
-                        left = slideWidth;
-                    }
-
-                    slides
-                        .filter(filterExpr)
-                        .children('.slideheader')
-                        .each(function() {
-                            var $this = $(this);
-                            var tab = {
-                                elem : $this,
-                                index : header.index($this),
-                                next : $this.next(),
-                                prev : $this.parent().prev().children('.slideheader'),
-                                pos : left
-                            };
-
-                            // trigger item anim, pass original trigger context for callback fn
-                            core.animSlide.call(tab, triggerTab);
-                        });
-
-                });
+                //Handle right side
+                slides
+                    .filter(':gt(' + triggerTab.index + ')')
+                    .children('.slideheader')
+                    .each(function() {
+                        var $this = $(this);
+                        var tab = {
+                            elem : $this,
+                            index : header.index($this),
+                            next : $this.next(),
+                            prev : $this.parent().prev().children('.slideheader'),
+                            pos : slideWidth
+                        };
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
 
                 header
                     .removeClass('selected')
@@ -263,5 +265,4 @@
             return elem;
         }
     };
-
 })(jQuery);
