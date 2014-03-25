@@ -56,15 +56,17 @@
             prev : function() {
                 header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
             },
-			
-			// return current slide
-			current : function() {
-				return core.currentSlide;
-			},
+            
+            // return current slide
+            current : function() {
+                return core.currentSlide;
+            },
         },
 
         core = {
-            // set style properties
+            currentSlide : settings.firstSlide - 1,
+            slideAnimCompleteFlag : false,
+
             setStyles : function() {
                 // set container height and width
                 elem
@@ -81,28 +83,17 @@
                 // set slide positions
                 core.setSlidePositions();
             },
-
-            // set initial positions for each slide
             setSlidePositions : function() {
-                var selected = header.filter('.selected');
-
-                // account for already selected slide
-                if (!selected.length)
-                    header.eq(settings.firstSlide - 1).addClass('selected');
-
+                header.eq(settings.firstSlide - 1).addClass('selected');
+                
                 header.each(function(index) {
-                    var $this = $(this),
-                        left = index * settings.headerWidth,
-                        margin = header.first().next(),
-                        offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
+                    var $this = $(this);
+                    var left = index * settings.headerWidth;
+                    var margin = header.first().next();
+                    var offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
 
-                    // compensate for already selected slide on resize
-                    if (selected.length) {
-                        if (index > header.index(selected))
-                            left += slideWidth;
-                    } else {
-                        if (index >= settings.firstSlide)
-                            left += slideWidth;
+                    if (index >= settings.firstSlide) {
+                        left += slideWidth;
                     }
 
                     // set each slide position
@@ -110,7 +101,7 @@
                         .css('left', left)
                         .width(settings.containerHeight)
                         .next()
-                            .width(slideWidth - offset  - settings.innerPaddingLeft - settings.innerPaddingRight)
+                            .width(slideWidth - offset - settings.innerPaddingLeft - settings.innerPaddingRight)
                             .css({
                                 left : left,
                                 paddingLeft : settings.headerWidth + settings.innerPaddingLeft,
@@ -118,9 +109,6 @@
                             });
                 });
             },
-
-            currentSlide : settings.firstSlide - 1,
-            slideAnimCompleteFlag : false,
 
             // trigger slide animation
             triggerSlide : function(e) {
@@ -133,23 +121,13 @@
                         parent : $this.parent()
                     };
 
-                                    // update core.currentSlide
                 core.currentSlide = tab.index;
-
-                // reset onSlideAnimComplete callback flag
                 core.slideAnimCompleteFlag = false;
 
                 // trigger callback in context of sibling div (jQuery wrapped)
                 settings.onTriggerSlide.call(tab.next, $this);
 
-                // animate
-                if ($this.hasClass('selected') && $this.position().left < slideWidth / 2) {
-                    // animate single selected tab
-                    core.animSlide.call(tab);
-                } else {
-                    // animate groups
-                    core.animSlideGroup(tab);
-                }
+                core.animSlideGroup(tab);
             },
 
             animSlide : function(triggerTab) {
