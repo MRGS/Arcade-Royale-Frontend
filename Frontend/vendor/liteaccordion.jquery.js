@@ -65,7 +65,7 @@
             currentSlide : settings.firstSlide - 1,
             slideAnimCompleteFlag : false,
 
-            setStyles : function() {
+            initStyles : function() {
                 // set container height and width
                 elem
                     .width(settings.containerWidth)
@@ -78,10 +78,9 @@
                     .children(':first-child')
                     .height(settings.headerWidth);
 
-                // set slide positions
-                core.setSlidePositions();
+                core.initSlidePositions();
             },
-            setSlidePositions : function() {
+            initSlidePositions : function() {
                 slides.eq(settings.firstSlide - 1).addClass('selected');
                 
                 slides.each(function(index) {
@@ -122,7 +121,7 @@
                 core.currentSlide = tab.index;
                 core.slideAnimCompleteFlag = false;
 
-                // trigger callback in context of sibling div (jQuery wrapped)
+                // if we have a callback set, trigger it in the context of the sibling div (jQuery wrapped)
                 settings.onTriggerSlide.call(tab.next, $this);
 
                 core.animSlideGroup(tab);
@@ -211,7 +210,7 @@
             }
         };
 
-        core.setStyles();
+        core.initStyles();
         slides.on('click.liteAccordion', core.triggerSlide);
         return methods;
     };
