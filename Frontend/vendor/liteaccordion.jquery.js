@@ -20,15 +20,12 @@
             containerHeight : 320,                  // fixed (px)
             headerWidth : 48,                       // fixed (px)
 
-            activateOn : 'click',                   // click or mouseover
+            // click or mouseover
             firstSlide : 1,                         // displays slide (n) on page load
             slideSpeed : 800,                       // slide animation speed
             onTriggerSlide : function(e) {},        // callback on slide activate
             onSlideAnimComplete : function() {},    // callback on slide anim complete
 
-            autoPlay : false,                       // automatically cycle through slides
-            pauseOnHover : false,                   // pause on hover
-            cycleSpeed : 6000,                      // time between slide cycles
             easing : 'swing',                       // custom easing function
 
             innerPaddingLeft : 15,
@@ -46,39 +43,18 @@
 
         // public methods
         methods = {
-
-            // start elem animation
-            play : function(index) {
-                var next = core.nextSlide(index && index);
-
-                if (core.playing) return;
-
-                // start autoplay
-                core.playing = setInterval(function() {
-                    header.eq(next()).trigger('click.liteAccordion');
-                }, settings.cycleSpeed);
-            },
-
             // jump to slide number
             goto : function(index) {
                 header.eq(index).trigger('click.liteAccordion');
             },
 
-            // stop elem animation
-            stop : function() {
-                clearInterval(core.playing);
-                core.playing = 0;
-            },
-
             // trigger next slide
             next : function() {
-                methods.stop();
                 header.eq(core.currentSlide === slideLen - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
             },
 
             // trigger previous slide
             prev : function() {
-                methods.stop();
                 header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
             },
 			
@@ -86,57 +62,16 @@
 			current : function() {
 				return core.currentSlide;
 			},
-
-            // destroy plugin instance
-            destroy : function() {
-                // stop autoplay
-                methods.stop();
-
-                // remove hashchange event bound to window
-                $(window).off('.liteAccordion');
-
-                // remove generated styles, classes, data, events
-                elem
-                    .attr('style', '')
-                    .removeClass('liteAccordion basic dark light stitch')
-                    .removeData('liteAccordion')
-                    .off('.liteAccordion')
-                    .find('li > :first-child')
-                    .off('.liteAccordion')
-                    .filter('.selected')
-                    .removeClass('selected')
-                    .end()
-                    .find('b')
-                    .remove();
-
-                slides
-                    .removeClass('slide')
-                    .children()
-                    .attr('style', '');
-            },
-
-            // poke around the internals (NOT CHAINABLE)
-            debug : function() {
-                return {
-                    elem : elem,
-                    defaults : defaults,
-                    settings : settings,
-                    methods : methods,
-                    core : core
-                };
-            }
         },
 
-        // core utility and animation methods
         core = {
-
             // set style properties
             setStyles : function() {
                 // set container height and width
                 elem
                     .width(settings.containerWidth)
                     .height(settings.containerHeight)
-                    .addClass('liteAccordion')
+                    .addClass('liteAccordion');
 
                 // set slide heights
                 slides
@@ -187,27 +122,9 @@
 
             // bind events
             bindEvents : function() {
-                // bind click and mouseover events
-                if (settings.activateOn === 'click') {
-                    header.on('click.liteAccordion', core.triggerSlide);
-                } else if (settings.activateOn === 'mouseover') {
-                    header.on('click.liteAccordion mouseover.liteAccordion', core.triggerSlide);
-                }
-
-                
-                // pause on hover (can't use custom events with $.hover())
-                if (settings.pauseOnHover && settings.autoPlay) {
-                    elem
-                        .on('mouseover.liteAccordion', function() {
-                            core.playing && methods.stop();
-                        })
-                        .on('mouseout.liteAccordion', function() {
-                            !core.playing && methods.play(core.currentSlide);
-                        });
-                }
+                header.on('click.liteAccordion', core.triggerSlide);
             },
 
-            // counter for autoPlay (zero index firstSlide on init)
             currentSlide : settings.firstSlide - 1,
 
             // next slide index
@@ -219,9 +136,6 @@
                     return next++ % slideLen;
                 };
             },
-
-            // holds interval counter
-            playing : 0,
 
             slideAnimCompleteFlag : false,
 
@@ -253,22 +167,21 @@
                     // animate groups
                     core.animSlideGroup(tab);
                 }
-
-                // stop autoplay, reset current slide index in core.nextSlide closure
-                if (settings.autoPlay) {
-                    methods.stop();
-                    methods.play(header.index(header.filter('.selected')));
-                }
             },
 
             animSlide : function(triggerTab) {
                 var _this = this;
 
                 // set pos for single selected tab
-                if (typeof this.pos === 'undefined') this.pos = slideWidth;
+                if (typeof this.pos === 'undefined') {
+                    this.pos = slideWidth;
+                }
 
                 // remove, then add selected class
-                header.removeClass('selected').filter(this.elem).addClass('selected');
+                header
+                    .removeClass('selected')
+                    .filter(this.elem)
+                    .addClass('selected');
 
                 // if slide index not zero
                 if (!!this.index) {
@@ -334,17 +247,8 @@
             },
 
             init : function() {
-
-
-                // init styles and events
                 core.setStyles();
                 core.bindEvents();
-
-                // check slide speed is not faster than cycle speed
-                if (settings.cycleSpeed < settings.slideSpeed) settings.cycleSpeed = settings.slideSpeed;
-
-                // init autoplay
-                settings.autoPlay && methods.play();
             }
         };
 
