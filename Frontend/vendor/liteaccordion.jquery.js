@@ -38,29 +38,24 @@
         slideCount = slides.length,
         slideWidth = settings.containerWidth - slideCount * settings.headerWidth,
 
-        // public methods
-        methods = {
+        publicMethods = {
             // jump to slide number
             goto : function(index) {
                 slides.eq(index).trigger('click.liteAccordion');
             },
-
             // trigger next slide
             next : function() {
                 slides.eq(core.currentSlide === slideCount - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
             },
-
             // trigger previous slide
             prev : function() {
                 slides.eq(core.currentSlide - 1).trigger('click.liteAccordion');
             },
-            
             // return current slide
             current : function() {
                 return core.currentSlide;
-            },
+            }
         },
-
         core = {
             currentSlide : settings.firstSlide - 1,
             slideAnimCompleteFlag : false,
@@ -85,7 +80,12 @@
                 
                 slides.each(function(index) {
                     var $this = $(this);
-                    var left = index * settings.headerWidth;
+                    if(index > 0) {
+                        var left = (index - 1) * settings.headerWidth;
+                    }
+                    else {
+                        var left = 0;
+                    }
                     var margin = slides.first().next();
                     var offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
 
@@ -130,12 +130,6 @@
             animSlide : function(triggerTab) {
                 var _this = this;
 
-                // set pos for single selected tab
-                if (typeof this.pos === 'undefined') {
-                    this.pos = slideWidth;
-                }
-
-                // remove, then add selected class
                 slides
                     .removeClass('selected')
                     .filter(this.elem)
@@ -147,7 +141,7 @@
                         .add(this.next)
                         .stop(true)
                         .animate({
-                                left : this.pos + this.index * settings.headerWidth
+                                left : this.pos
                             },
                             settings.slideSpeed,
                             settings.easing,
@@ -161,10 +155,10 @@
                             }
                         );
 
-                        slides
-                            .removeClass('selected')
-                            .filter(this.prev)
-                            .addClass('selected');
+                    slides
+                        .removeClass('selected')
+                        .filter(this.prev)
+                        .addClass('selected');
 
                 }
             },
@@ -176,12 +170,14 @@
                     .filter(':lt(' + (triggerTab.index + 1) + ')')
                     .each(function() {
                         var $this = $(this);
+                        var ind = slides.index($this);
+
                         var tab = {
                             elem : $this,
-                            index : slides.index($this),
+                            index : ind,
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : 0
+                            pos : (ind - 1) * settings.headerWidth
                         };
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
@@ -192,12 +188,14 @@
                     .filter(':gt(' + triggerTab.index + ')')
                     .each(function() {
                         var $this = $(this);
+                        var ind = slides.index($this);
+
                         var tab = {
                             elem : $this,
                             index : slides.index($this),
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : slideWidth
+                            pos : slideWidth + (ind - 1) * settings.headerWidth
                         };
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
@@ -212,7 +210,7 @@
 
         core.initStyles();
         slides.on('click.liteAccordion', core.triggerSlide);
-        return methods;
+        return publicMethods;
     };
 
     // jQuery access
