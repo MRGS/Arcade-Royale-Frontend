@@ -34,28 +34,25 @@
         // merge defaults with options in new settings object
         settings = $.extend({}, defaults, options),
 
-        // 'globals'
         slides = elem.children('ol').children('li'),
-        header = slides,
-        // header = slides.children(':first-child'),
-        slideLen = slides.length,
-        slideWidth = settings.containerWidth - slideLen * settings.headerWidth,
+        slideCount = slides.length,
+        slideWidth = settings.containerWidth - slideCount * settings.headerWidth,
 
         // public methods
         methods = {
             // jump to slide number
             goto : function(index) {
-                header.eq(index).trigger('click.liteAccordion');
+                slides.eq(index).trigger('click.liteAccordion');
             },
 
             // trigger next slide
             next : function() {
-                header.eq(core.currentSlide === slideLen - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
+                slides.eq(core.currentSlide === slideCount - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
             },
 
             // trigger previous slide
             prev : function() {
-                header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
+                slides.eq(core.currentSlide - 1).trigger('click.liteAccordion');
             },
             
             // return current slide
@@ -85,12 +82,12 @@
                 core.setSlidePositions();
             },
             setSlidePositions : function() {
-                header.eq(settings.firstSlide - 1).addClass('selected');
+                slides.eq(settings.firstSlide - 1).addClass('selected');
                 
-                header.each(function(index) {
+                slides.each(function(index) {
                     var $this = $(this);
                     var left = index * settings.headerWidth;
-                    var margin = header.first().next();
+                    var margin = slides.first().next();
                     var offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
 
                     if (index >= settings.firstSlide) {
@@ -116,7 +113,7 @@
                 var $this = $(this),
                     tab = {
                         elem : $this,
-                        index : header.index($this),
+                        index : slides.index($this),
                         next : $this.next(),
                         prev : $this.prev(),
                         parent : $this.parent()
@@ -140,7 +137,7 @@
                 }
 
                 // remove, then add selected class
-                header
+                slides
                     .removeClass('selected')
                     .filter(this.elem)
                     .addClass('selected');
@@ -165,7 +162,7 @@
                             }
                         );
 
-                        header
+                        slides
                             .removeClass('selected')
                             .filter(this.prev)
                             .addClass('selected');
@@ -182,7 +179,7 @@
                         var $this = $(this);
                         var tab = {
                             elem : $this,
-                            index : header.index($this),
+                            index : slides.index($this),
                             next : $this.next(),
                             prev : $this.prev(),
                             pos : 0
@@ -198,7 +195,7 @@
                         var $this = $(this);
                         var tab = {
                             elem : $this,
-                            index : header.index($this),
+                            index : slides.index($this),
                             next : $this.next(),
                             prev : $this.prev(),
                             pos : slideWidth
@@ -207,7 +204,7 @@
                         core.animSlide.call(tab, triggerTab);
                     });
 
-                header
+                slides
                     .removeClass('selected')
                     .filter(triggerTab.elem)
                     .addClass('selected');
@@ -215,7 +212,7 @@
         };
 
         core.setStyles();
-        header.on('click.liteAccordion', core.triggerSlide);
+        slides.on('click.liteAccordion', core.triggerSlide);
         return methods;
     };
 
