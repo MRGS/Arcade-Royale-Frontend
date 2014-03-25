@@ -36,7 +36,8 @@
 
         // 'globals'
         slides = elem.children('ol').children('li'),
-        header = slides.children(':first-child'),
+        header = slides,
+        // header = slides.children(':first-child'),
         slideLen = slides.length,
         slideWidth = settings.containerWidth - slideLen * settings.headerWidth,
 
@@ -117,7 +118,7 @@
                         elem : $this,
                         index : header.index($this),
                         next : $this.next(),
-                        prev : $this.parent().prev().children('.slideheader'),
+                        prev : $this.prev(),
                         parent : $this.parent()
                     };
 
@@ -174,18 +175,16 @@
 
             // animates left and right groups of slides
             animSlideGroup : function(triggerTab) {
-
                 //Handle left side
                 slides
                     .filter(':lt(' + (triggerTab.index + 1) + ')')
-                    .children('.slideheader')
                     .each(function() {
                         var $this = $(this);
                         var tab = {
                             elem : $this,
                             index : header.index($this),
                             next : $this.next(),
-                            prev : $this.parent().prev().children('.slideheader'),
+                            prev : $this.prev(),
                             pos : 0
                         };
                         // pass original trigger context for callback fn
@@ -195,14 +194,13 @@
                 //Handle right side
                 slides
                     .filter(':gt(' + triggerTab.index + ')')
-                    .children('.slideheader')
                     .each(function() {
                         var $this = $(this);
                         var tab = {
                             elem : $this,
                             index : header.index($this),
                             next : $this.next(),
-                            prev : $this.parent().prev().children('.slideheader'),
+                            prev : $this.prev(),
                             pos : slideWidth
                         };
                         // pass original trigger context for callback fn
@@ -221,6 +219,7 @@
         return methods;
     };
 
+    // jQuery access
     $.fn.liteAccordion = function(method) {
         var elem = this;
         var instance = elem.data('liteAccordion');
