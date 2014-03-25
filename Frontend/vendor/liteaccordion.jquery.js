@@ -20,7 +20,6 @@
             containerHeight : 320,                  // fixed (px)
             headerWidth : 48,                       // fixed (px)
 
-            // click or mouseover
             firstSlide : 1,                         // displays slide (n) on page load
             slideSpeed : 800,                       // slide animation speed
             onTriggerSlide : function(e) {},        // callback on slide activate
@@ -120,23 +119,7 @@
                 });
             },
 
-            // bind events
-            bindEvents : function() {
-                header.on('click.liteAccordion', core.triggerSlide);
-            },
-
             currentSlide : settings.firstSlide - 1,
-
-            // next slide index
-            nextSlide : function(index) {
-                var next = index + 1 || core.currentSlide + 1;
-
-                // closure
-                return function() {
-                    return next++ % slideLen;
-                };
-            },
-
             slideAnimCompleteFlag : false,
 
             // trigger slide animation
@@ -189,8 +172,8 @@
                         .add(this.next)
                         .stop(true)
                         .animate({
-                            left : this.pos + this.index * settings.headerWidth
-                        },
+                                left : this.pos + this.index * settings.headerWidth
+                            },
                             settings.slideSpeed,
                             settings.easing,
                             function() {
@@ -200,10 +183,13 @@
                                     settings.onSlideAnimComplete.call(triggerTab ? triggerTab.next : _this.prev.next());
                                     core.slideAnimCompleteFlag = true;
                                 }
-                            });
+                            }
+                        );
 
-                        // remove, then add selected class
-                        header.removeClass('selected').filter(this.prev).addClass('selected');
+                        header
+                            .removeClass('selected')
+                            .filter(this.prev)
+                            .addClass('selected');
 
                 }
             },
@@ -218,7 +204,8 @@
                     if (side === 'left')  {
                         filterExpr = ':lt(' + (triggerTab.index + 1) + ')';
                         left = 0;
-                    } else {
+                    }
+                    else {
                         filterExpr = ':gt(' + triggerTab.index + ')';
                         left = slideWidth;
                     }
@@ -227,14 +214,14 @@
                         .filter(filterExpr)
                         .children('.slideheader')
                         .each(function() {
-                            var $this = $(this),
-                                tab = {
-                                    elem : $this,
-                                    index : header.index($this),
-                                    next : $this.next(),
-                                    prev : $this.parent().prev().children('.slideheader'),
-                                    pos : left
-                                };
+                            var $this = $(this);
+                            var tab = {
+                                elem : $this,
+                                index : header.index($this),
+                                next : $this.next(),
+                                prev : $this.parent().prev().children('.slideheader'),
+                                pos : left
+                            };
 
                             // trigger item anim, pass original trigger context for callback fn
                             core.animSlide.call(tab, triggerTab);
@@ -242,49 +229,38 @@
 
                 });
 
-                // remove, then add selected class
-                header.removeClass('selected').filter(triggerTab.elem).addClass('selected');
-            },
-
-            init : function() {
-                core.setStyles();
-                core.bindEvents();
+                header
+                    .removeClass('selected')
+                    .filter(triggerTab.elem)
+                    .addClass('selected');
             }
         };
 
-        // init plugin
-        core.init();
-
-        // expose methods
+        core.setStyles();
+        header.on('click.liteAccordion', core.triggerSlide);
         return methods;
     };
 
     $.fn.liteAccordion = function(method) {
-        var elem = this,
-            instance = elem.data('liteAccordion');
+        var elem = this;
+        var instance = elem.data('liteAccordion');
 
         // if creating a new instance
         if (typeof method === 'object' || !method) {
             return elem.each(function() {
-                var liteAccordion;
+                if (instance) {
+                    return;
+                }
 
-                // if plugin already instantiated, return
-                if (instance) return;
-
-                // otherwise create a new instance
-                liteAccordion = new LiteAccordion(elem, method);
+                var liteAccordion = new LiteAccordion(elem, method);
                 elem.data('liteAccordion', liteAccordion);
             });
 
         // otherwise, call method on current instance
-        } else if (typeof method === 'string' && instance[method]) {
-            // debug method isn't chainable b/c we need the debug object to be returned
-            if (method === 'debug') {
-                return instance[method].call(elem);
-            } else { // the rest of the methods are chainable though
-                instance[method].call(elem);
-                return elem;
-            }
+        }
+        else if (typeof method === 'string' && instance[method]) {
+            instance[method].call(elem);
+            return elem;
         }
     };
 
