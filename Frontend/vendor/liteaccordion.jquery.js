@@ -29,16 +29,17 @@
 
             innerPaddingLeft : 15,
             innerPaddingRight : 20,
-        },
+            minimumSlideWidth : 600
+        };
 
         // merge defaults with options in new settings object
-        settings = $.extend({}, defaults, options),
+        var settings = $.extend({}, defaults, options);
 
-        slides = elem.children('ol').children('li'),
-        slideCount = slides.length,
-        slideWidth = settings.containerWidth - slideCount * settings.headerWidth,
+        var slides = elem.children('ol').children('li');
+        var slideCount = slides.length;
+        var slideWidth = settings.containerWidth - slideCount * settings.headerWidth;
 
-        publicMethods = {
+        var publicMethods = {
             // jump to slide number
             goto : function(index) {
                 slides.eq(index).trigger('click.liteAccordion');
@@ -106,7 +107,6 @@
                             });
                 });
             },
-
             // trigger slide animation
             triggerSlide : function(e) {
                 var $this = $(this),
@@ -126,7 +126,6 @@
 
                 core.animSlideGroup(tab);
             },
-
             animSlide : function(triggerTab) {
                 var _this = this;
 
@@ -138,7 +137,6 @@
                 // if slide index not zero
                 if (!!this.index) {
                     this.elem
-                        .add(this.next)
                         .stop(true)
                         .animate({
                                 left : this.pos
@@ -162,9 +160,8 @@
 
                 }
             },
-
             // animates left and right groups of slides
-            animSlideGroup : function(triggerTab) {
+            animSlideGroupUncompressed : function(triggerTab) {
                 //Handle left side
                 slides
                     .filter(':lt(' + (triggerTab.index + 1) + ')')
@@ -208,12 +205,22 @@
             }
         };
 
+        if(slideWidth < settings.minimumSlideWidth) {
+            slideWidth = settings.minimumSlideWidth;
+            console.log("compressing!");
+            core.animSlideGroup = core.animSlideGroupUncompressed;
+        }
+        else {
+            core.animSlideGroup = core.animSlideGroupUncompressed;
+            // core.animSlideGroup = core.animSlideGroupCompressed;
+        }
+
         core.initStyles();
         slides.on('click.liteAccordion', core.triggerSlide);
         return publicMethods;
     };
 
-    // jQuery access
+    // expose as jQuery function
     $.fn.liteAccordion = function(method) {
         var elem = this;
         var instance = elem.data('liteAccordion');
