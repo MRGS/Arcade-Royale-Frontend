@@ -7,6 +7,11 @@ MIT License.
 fs = require 'fs'
 cproc = require 'child_process'
 helpers = require './helpers'
+cseval = require('coffee-script').eval
+
+parseCSON = (path) ->
+    cseval(fs.readFileSync(path).toString())
+
 gui = global.window.nwDispatcher.requireNwGui()
 
 $ = window.$
@@ -14,7 +19,8 @@ $ = window.$
 lastKeypress = 0
 locked = false
 
-settings = JSON.parse(fs.readFileSync('../settings.json'))
+settings = parseCSON('../settings.cson')
+
 settings.leftColour = helpers.hexToHsl(settings.leftColour)
 settings.rightColour = helpers.hexToHsl(settings.rightColour)
 
@@ -47,10 +53,10 @@ filenames = fs.readdirSync(settings.baseDirectory)
 for file in filenames
     path = settings.baseDirectory + file
     if fs.statSync(path).isDirectory()
-        if fs.existsSync(path + '/arcadedata.json')
+        if fs.existsSync(path + '/arcadedata.cson')
             game = null
             try
-                game = JSON.parse(fs.readFileSync(path + '/arcadedata.json'))
+                game = parseCSON(path + '/arcadedata.cson')
             catch e
                 console.log("Parsing error on " + path)
                 console.log(e)
