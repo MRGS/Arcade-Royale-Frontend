@@ -20,123 +20,53 @@
             containerHeight : 320,                  // fixed (px)
             headerWidth : 48,                       // fixed (px)
 
-            activateOn : 'click',                   // click or mouseover
             firstSlide : 1,                         // displays slide (n) on page load
             slideSpeed : 800,                       // slide animation speed
             onTriggerSlide : function(e) {},        // callback on slide activate
             onSlideAnimComplete : function() {},    // callback on slide anim complete
 
-            autoPlay : false,                       // automatically cycle through slides
-            pauseOnHover : false,                   // pause on hover
-            cycleSpeed : 6000,                      // time between slide cycles
             easing : 'swing',                       // custom easing function
 
             innerPaddingLeft : 15,
             innerPaddingRight : 20,
-        },
+            minimumSlideWidth : 600
+        };
 
         // merge defaults with options in new settings object
-        settings = $.extend({}, defaults, options),
+        var settings = $.extend({}, defaults, options);
 
-        // 'globals'
-        slides = elem.children('ol').children('li'),
-        header = slides.children(':first-child'),
-        slideLen = slides.length,
-        slideWidth = settings.containerWidth - slideLen * settings.headerWidth,
+        var slides = elem.children('ol').children('li');
+        var slideCount = slides.length;
+        var slideWidth = settings.containerWidth - slideCount * settings.headerWidth;
 
-        // public methods
-        methods = {
-
-            // start elem animation
-            play : function(index) {
-                var next = core.nextSlide(index && index);
-
-                if (core.playing) return;
-
-                // start autoplay
-                core.playing = setInterval(function() {
-                    header.eq(next()).trigger('click.liteAccordion');
-                }, settings.cycleSpeed);
-            },
-
+        var publicMethods = {
             // jump to slide number
             goto : function(index) {
-                header.eq(index).trigger('click.liteAccordion');
+                slides.eq(index).trigger('click.liteAccordion');
             },
-
-            // stop elem animation
-            stop : function() {
-                clearInterval(core.playing);
-                core.playing = 0;
-            },
-
             // trigger next slide
             next : function() {
-                methods.stop();
-                header.eq(core.currentSlide === slideLen - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
+                slides.eq(core.currentSlide === slideCount - 1 ? 0 : core.currentSlide + 1).trigger('click.liteAccordion');
             },
-
             // trigger previous slide
             prev : function() {
-                methods.stop();
-                header.eq(core.currentSlide - 1).trigger('click.liteAccordion');
+                slides.eq(core.currentSlide - 1).trigger('click.liteAccordion');
             },
-			
-			// return current slide
-			current : function() {
-				return core.currentSlide;
-			},
-
-            // destroy plugin instance
-            destroy : function() {
-                // stop autoplay
-                methods.stop();
-
-                // remove hashchange event bound to window
-                $(window).off('.liteAccordion');
-
-                // remove generated styles, classes, data, events
-                elem
-                    .attr('style', '')
-                    .removeClass('liteAccordion basic dark light stitch')
-                    .removeData('liteAccordion')
-                    .off('.liteAccordion')
-                    .find('li > :first-child')
-                    .off('.liteAccordion')
-                    .filter('.selected')
-                    .removeClass('selected')
-                    .end()
-                    .find('b')
-                    .remove();
-
-                slides
-                    .removeClass('slide')
-                    .children()
-                    .attr('style', '');
-            },
-
-            // poke around the internals (NOT CHAINABLE)
-            debug : function() {
-                return {
-                    elem : elem,
-                    defaults : defaults,
-                    settings : settings,
-                    methods : methods,
-                    core : core
-                };
+            // return current slide
+            current : function() {
+                return core.currentSlide;
             }
         },
-
-        // core utility and animation methods
         core = {
+            currentSlide : settings.firstSlide - 1,
+            slideAnimCompleteFlag : false,
 
-            // set style properties
-            setStyles : function() {
+            initStyles : function() {
                 // set container height and width
                 elem
                     .width(settings.containerWidth)
                     .height(settings.containerHeight)
-                    .addClass('liteAccordion')
+                    .addClass('liteAccordion');
 
                 // set slide heights
                 slides
@@ -144,31 +74,24 @@
                     .children(':first-child')
                     .height(settings.headerWidth);
 
-                // set slide positions
-                core.setSlidePositions();
+                core.initSlidePositions();
             },
+            initSlidePositions : function() {
+                slides.eq(settings.firstSlide - 1).addClass('selected');
+                
+                slides.each(function(index) {
+                    var $this = $(this);
+                    if(index > 0) {
+                        var left = (index - 1) * settings.headerWidth;
+                    }
+                    else {
+                        var left = 0;
+                    }
+                    var margin = slides.first().next();
+                    var offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
 
-            // set initial positions for each slide
-            setSlidePositions : function() {
-                var selected = header.filter('.selected');
-
-                // account for already selected slide
-                if (!selected.length)
-                    header.eq(settings.firstSlide - 1).addClass('selected');
-
-                header.each(function(index) {
-                    var $this = $(this),
-                        left = index * settings.headerWidth,
-                        margin = header.first().next(),
-                        offset = parseInt(margin.css('marginLeft'), 10) || parseInt(margin.css('marginRight'), 10) || 0;
-
-                    // compensate for already selected slide on resize
-                    if (selected.length) {
-                        if (index > header.index(selected))
-                            left += slideWidth;
-                    } else {
-                        if (index >= settings.firstSlide)
-                            left += slideWidth;
+                    if (index >= settings.firstSlide) {
+                        left += slideWidth;
                     }
 
                     // set each slide position
@@ -176,7 +99,7 @@
                         .css('left', left)
                         .width(settings.containerHeight)
                         .next()
-                            .width(slideWidth - offset  - settings.innerPaddingLeft - settings.innerPaddingRight)
+                            .width(slideWidth - offset - settings.innerPaddingLeft - settings.innerPaddingRight)
                             .css({
                                 left : left,
                                 paddingLeft : settings.headerWidth + settings.innerPaddingLeft,
@@ -184,100 +107,40 @@
                             });
                 });
             },
-
-            // bind events
-            bindEvents : function() {
-                // bind click and mouseover events
-                if (settings.activateOn === 'click') {
-                    header.on('click.liteAccordion', core.triggerSlide);
-                } else if (settings.activateOn === 'mouseover') {
-                    header.on('click.liteAccordion mouseover.liteAccordion', core.triggerSlide);
-                }
-
-                
-                // pause on hover (can't use custom events with $.hover())
-                if (settings.pauseOnHover && settings.autoPlay) {
-                    elem
-                        .on('mouseover.liteAccordion', function() {
-                            core.playing && methods.stop();
-                        })
-                        .on('mouseout.liteAccordion', function() {
-                            !core.playing && methods.play(core.currentSlide);
-                        });
-                }
-            },
-
-            // counter for autoPlay (zero index firstSlide on init)
-            currentSlide : settings.firstSlide - 1,
-
-            // next slide index
-            nextSlide : function(index) {
-                var next = index + 1 || core.currentSlide + 1;
-
-                // closure
-                return function() {
-                    return next++ % slideLen;
-                };
-            },
-
-            // holds interval counter
-            playing : 0,
-
-            slideAnimCompleteFlag : false,
-
             // trigger slide animation
             triggerSlide : function(e) {
                 var $this = $(this),
                     tab = {
                         elem : $this,
-                        index : header.index($this),
+                        index : slides.index($this),
                         next : $this.next(),
-                        prev : $this.parent().prev().children('.slideheader'),
+                        prev : $this.prev(),
                         parent : $this.parent()
                     };
 
-                                    // update core.currentSlide
                 core.currentSlide = tab.index;
-
-                // reset onSlideAnimComplete callback flag
                 core.slideAnimCompleteFlag = false;
 
-                // trigger callback in context of sibling div (jQuery wrapped)
+                // if we have a callback set, trigger it in the context of the sibling div (jQuery wrapped)
                 settings.onTriggerSlide.call(tab.next, $this);
 
-                // animate
-                if ($this.hasClass('selected') && $this.position().left < slideWidth / 2) {
-                    // animate single selected tab
-                    core.animSlide.call(tab);
-                } else {
-                    // animate groups
-                    core.animSlideGroup(tab);
-                }
-
-                // stop autoplay, reset current slide index in core.nextSlide closure
-                if (settings.autoPlay) {
-                    methods.stop();
-                    methods.play(header.index(header.filter('.selected')));
-                }
+                core.animSlideGroup(tab);
             },
-
             animSlide : function(triggerTab) {
                 var _this = this;
 
-                // set pos for single selected tab
-                if (typeof this.pos === 'undefined') this.pos = slideWidth;
-
-                // remove, then add selected class
-                header.removeClass('selected').filter(this.elem).addClass('selected');
+                slides
+                    .removeClass('selected')
+                    .filter(this.elem)
+                    .addClass('selected');
 
                 // if slide index not zero
                 if (!!this.index) {
                     this.elem
-                        .add(this.next)
                         .stop(true)
                         .animate({
-                            left : this.pos + this.index * settings.headerWidth
-                        },
+                                left : this.pos
+                            },
                             settings.slideSpeed,
                             settings.easing,
                             function() {
@@ -287,101 +150,97 @@
                                     settings.onSlideAnimComplete.call(triggerTab ? triggerTab.next : _this.prev.next());
                                     core.slideAnimCompleteFlag = true;
                                 }
-                            });
+                            }
+                        );
 
-                        // remove, then add selected class
-                        header.removeClass('selected').filter(this.prev).addClass('selected');
+                    slides
+                        .removeClass('selected')
+                        .filter(this.prev)
+                        .addClass('selected');
 
                 }
             },
-
             // animates left and right groups of slides
-            animSlideGroup : function(triggerTab) {
-                var group = ['left', 'right'];
+            animSlideGroupUncompressed : function(triggerTab) {
+                //Handle left side
+                slides
+                    .filter(':lt(' + (triggerTab.index + 1) + ')')
+                    .each(function() {
+                        var $this = $(this);
+                        var ind = slides.index($this);
 
-                $.each(group, function(index, side) {
-                    var filterExpr, left;
+                        var tab = {
+                            elem : $this,
+                            index : ind,
+                            next : $this.next(),
+                            prev : $this.prev(),
+                            pos : (ind - 1) * settings.headerWidth
+                        };
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
 
-                    if (side === 'left')  {
-                        filterExpr = ':lt(' + (triggerTab.index + 1) + ')';
-                        left = 0;
-                    } else {
-                        filterExpr = ':gt(' + triggerTab.index + ')';
-                        left = slideWidth;
-                    }
+                //Handle right side
+                slides
+                    .filter(':gt(' + triggerTab.index + ')')
+                    .each(function() {
+                        var $this = $(this);
+                        var ind = slides.index($this);
 
-                    slides
-                        .filter(filterExpr)
-                        .children('.slideheader')
-                        .each(function() {
-                            var $this = $(this),
-                                tab = {
-                                    elem : $this,
-                                    index : header.index($this),
-                                    next : $this.next(),
-                                    prev : $this.parent().prev().children('.slideheader'),
-                                    pos : left
-                                };
+                        var tab = {
+                            elem : $this,
+                            index : slides.index($this),
+                            next : $this.next(),
+                            prev : $this.prev(),
+                            pos : slideWidth + (ind - 1) * settings.headerWidth
+                        };
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
 
-                            // trigger item anim, pass original trigger context for callback fn
-                            core.animSlide.call(tab, triggerTab);
-                        });
-
-                });
-
-                // remove, then add selected class
-                header.removeClass('selected').filter(triggerTab.elem).addClass('selected');
-            },
-
-            init : function() {
-
-
-                // init styles and events
-                core.setStyles();
-                core.bindEvents();
-
-                // check slide speed is not faster than cycle speed
-                if (settings.cycleSpeed < settings.slideSpeed) settings.cycleSpeed = settings.slideSpeed;
-
-                // init autoplay
-                settings.autoPlay && methods.play();
+                slides
+                    .removeClass('selected')
+                    .filter(triggerTab.elem)
+                    .addClass('selected');
             }
         };
 
-        // init plugin
-        core.init();
+        if(slideWidth < settings.minimumSlideWidth) {
+            slideWidth = settings.minimumSlideWidth;
+            console.log("compressing!");
+            core.animSlideGroup = core.animSlideGroupUncompressed;
+        }
+        else {
+            core.animSlideGroup = core.animSlideGroupUncompressed;
+            // core.animSlideGroup = core.animSlideGroupCompressed;
+        }
 
-        // expose methods
-        return methods;
+        core.initStyles();
+        slides.on('click.liteAccordion', core.triggerSlide);
+        return publicMethods;
     };
 
+    // expose as jQuery function
     $.fn.liteAccordion = function(method) {
-        var elem = this,
-            instance = elem.data('liteAccordion');
+        var elem = this;
+        var instance = elem.data('liteAccordion');
 
         // if creating a new instance
         if (typeof method === 'object' || !method) {
             return elem.each(function() {
-                var liteAccordion;
+                if (instance) {
+                    return;
+                }
 
-                // if plugin already instantiated, return
-                if (instance) return;
-
-                // otherwise create a new instance
-                liteAccordion = new LiteAccordion(elem, method);
+                var liteAccordion = new LiteAccordion(elem, method);
                 elem.data('liteAccordion', liteAccordion);
             });
 
         // otherwise, call method on current instance
-        } else if (typeof method === 'string' && instance[method]) {
-            // debug method isn't chainable b/c we need the debug object to be returned
-            if (method === 'debug') {
-                return instance[method].call(elem);
-            } else { // the rest of the methods are chainable though
-                instance[method].call(elem);
-                return elem;
-            }
+        }
+        else if (typeof method === 'string' && instance[method]) {
+            instance[method].call(elem);
+            return elem;
         }
     };
-
 })(jQuery);
