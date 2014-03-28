@@ -140,7 +140,8 @@
                 if (!!this.index) {
                     this.elem
                         .stop(true)
-                        .animate({
+                        .transition({
+                        // .animate({
                                 left : this.pos
                             },
                             settings.slideSpeed,
