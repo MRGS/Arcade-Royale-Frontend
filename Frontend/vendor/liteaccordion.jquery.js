@@ -1,15 +1,7 @@
-/*************************************************!
-*
-*   project:    liteAccordion - a horizontal accordion plugin for jQuery
-*   author:     Nicola Hibbert
-*   url:        http://nicolahibbert.com/liteaccordion-v2/
-*   demo:       http://www.nicolahibbert.com/demo/liteAccordion/
-*
-*   Version:    2.2.0
-*   Copyright:  (c) 2010-2013 Nicola Hibbert
-*   Licence:    MIT
-*
-**************************************************/
+/////////////////////////////
+// liteAccordion-royale-mod
+// based on liteAccordion by Nicola Hibbert: http://nicolahibbert.com/liteaccordion-v2/
+/////////////////////////////
 
 ;(function($) {
 
