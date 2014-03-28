@@ -209,13 +209,16 @@ $ ->
     # ...And stick 'em in our document
     $("head").append( "<style>" + style.join("\n") + "</style>" )
 
+    # TODO: expose relevant setup values in the cson, add defaults object to be extended by settings override
     # Now set up dat accordion.
     la = $("#mainContainer").liteAccordion({
-        "easing":"easeOutCubic"
-        "containerWidth": $(window).width()
-        "containerHeight": $(window).height()
-        "headerWidth": 80
-        "slideSpeed": 400
+        easing : "easeOutCubic"
+        containerWidth : $(window).width()
+        containerHeight : $(window).height()
+        headerWidth : 80
+        slideSpeed : 400
+        minimumSlideWidth : 0
+        minimumAdjacentVisibleSlideHeaders : 0
         ## experimental optimization to hide non-visible slide content.
         ## doesn't seem to noticeably affect performance.
         # "onTriggerSlide": (e) ->
@@ -233,7 +236,6 @@ $ ->
         if locked
             return 0
         lastKeypress = process.uptime()
-        la.stop()
 
         if e.which is 122 #f11
             gui.Window.get().reload(3)
@@ -263,18 +265,21 @@ $ ->
                     gameproc.on('exit', ->
                         locked = false
                         lastKeypress = process.uptime()
-                        am_timer = setInterval(doAttractMode, 1000)
+                        am_timer = setInterval(doAttractMode, settings.attractModeCycleTimer)
 
                         $(".mainContainer").show()
                         $(".fader").fadeOut(600)
                     )
 
+    # TODO: add these to cson
+    settings.attractModeDelay = 15
+    settings.attractModeCycleTimer = 5
+
+    settings.attractModeCycleTimer *= 1000
+
     doAttractMode = ->
         now = process.uptime()
-        if now > lastKeypress + 15
-            # note that we're only letting the accordion know it should play
-            # here, not actually incrementing the slide. this could probably
-            # be a bit more elegant...
-            la.play()
+        if now > lastKeypress + settings.attractModeDelay
+            la.next()
     
-    am_timer = setInterval(doAttractMode, 1000)
+    am_timer = setInterval(doAttractMode, settings.attractModeCycleTimer)

@@ -1,0 +1,7 @@
+
+
+-LESS variables and coffee variables together in cson -> parse less from coffee (--> OR set css using jquery)
+
+
+-extract to templates (koffeecup?)
+

@@ -53,6 +53,16 @@ h1 {
     }
 
     .slide {
+    	overflow: hidden;
+    	position: absolute;
+    	top: 0px;
+    	left: 0px;
+    	height: 100%;
+    	// margin: 0;
+    	// z-index: 100;
+    	// z-index: 10;
+    	-webkit-backface-visibility: hidden; /* fixes chrome bug */
+
         .slideheader {
         	color: white;
         	padding-top: 13px;
@@ -62,10 +72,11 @@ h1 {
             font-size: 60px;
             margin: 0;
             z-index: 100;
-            position: absolute;
+            position: relative;
+            // position: absolute;
             top: 0px;
             left: 0px;
-            -webkit-backface-visibility: hidden; /* fixes chrome bug */
+            // -webkit-backface-visibility: hidden; /* fixes chrome bug */
             -webkit-transform: translateX(-100%) rotate(-90deg);
             -webkit-transform-origin: right top;
             // currently node-webkit only recognizes the vendor-prefixed versions.
