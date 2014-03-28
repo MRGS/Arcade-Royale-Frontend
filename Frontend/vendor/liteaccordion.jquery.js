@@ -39,7 +39,7 @@
 
         var slides = elem.children('ol').children('li');
         var slideCount = slides.length;
-        var slideWidth = settings.containerWidth - slideCount * settings.headerWidth;
+        var slideWidth = settings.containerWidth - (slideCount * settings.headerWidth);
 
         var publicMethods = {
             // jump to slide number
@@ -84,7 +84,7 @@
                 slides.each(function(index) {
                     var $this = $(this);
                     if(index > 0) {
-                        var left = (index - 1) * settings.headerWidth;
+                        var left = index * settings.headerWidth;
                     }
                     else {
                         var left = 0;
@@ -97,13 +97,14 @@
                     }
 
                     // set each slide position
+                    $this.find('.slideheader')
+                        .width(settings.containerHeight);
+
                     $this
                         .css('left', left)
-                        .width(settings.containerHeight)
-                        .next()
+                        .find('.slidecontent')
                             .width(slideWidth - offset - settings.innerPaddingLeft - settings.innerPaddingRight)
                             .css({
-                                left : left,
                                 paddingLeft : settings.headerWidth + settings.innerPaddingLeft,
                                 paddingRight : settings.innerPaddingRight,
                             });
@@ -140,8 +141,8 @@
                 if (!!this.index) {
                     this.elem
                         .stop(true)
-                        .transition({
-                        // .animate({
+                        // .transition({
+                        .animate({
                                 left : this.pos
                             },
                             settings.slideSpeed,
@@ -178,7 +179,7 @@
                             index : slideIndex,
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : (slideIndex - 1) * settings.headerWidth
+                            pos : slideIndex * settings.headerWidth
                         };
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
@@ -196,7 +197,7 @@
                             index : slideIndex,
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : slideWidth + (slideIndex - 1) * settings.headerWidth
+                            pos : slideWidth + (slideIndex * settings.headerWidth)
                         };
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
@@ -206,7 +207,9 @@
                     .removeClass('selected')
                     .filter(triggerTab.elem)
                     .addClass('selected');
-            },
+            }
+            /*
+            ,
             animSlideGroupCompressed : function(triggerTab) {
                 //Handle self
                 triggerTab.pos = (triggerTab.index - 1) * settings.headerWidth;
@@ -311,6 +314,7 @@
                     .filter(triggerTab.elem)
                     .addClass('selected');
             }
+            */
         };
 
 
