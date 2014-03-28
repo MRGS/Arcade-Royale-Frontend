@@ -196,14 +196,6 @@ $ ->
             elem.append('<div class="controls"></div>')
             parseControls(game.controls, elem.find(".controls:last-child"))
 
-        # if game.url?
-        #     elem.qrcode({
-        #         render: 'image'
-        #         size: 120
-        #         fill: '#222'
-        #         text: game.url
-        #     })
-
 
     # Generate the styles for each slide...
     style = for i in [0..games.length]

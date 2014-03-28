@@ -68,8 +68,9 @@ h1 {
             -webkit-backface-visibility: hidden; /* fixes chrome bug */
             -webkit-transform: translateX(-100%) rotate(-90deg);
             -webkit-transform-origin: right top;
-            transform: translateX(-100%) rotate(-90deg);
-            transform-origin: right top;
+            // currently node-webkit only recognizes the vendor-prefixed versions.
+            // transform: translateX(-100%) rotate(-90deg);
+            // transform-origin: right top;
 
             span {
                 display: block;
