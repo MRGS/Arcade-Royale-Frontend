@@ -2,18 +2,17 @@
 
 ///////////////////
 
-@min-slide-width: 340px;
-@constrols-button-size: 60px;
+@controls-button-size: 60px;
 
 ///////////////////
 
 body {
-	cursor: none !important;
-	font-family: Lato, Arial, sans-serif;
-	text-rendering: optimizeLegibility;
-	color: #000;
-	margin: 0;
-	overflow: hidden;
+    cursor: none !important;
+    font-family: Lato, Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    color: #000;
+    margin: 0;
+    overflow: hidden;
 }
 
 .fader {
@@ -29,10 +28,10 @@ body {
 }
 
 h1 { 
-	color: #000;
-	font-family: CodePro;
-	font-weight: normal;
-	font-size: 50px;
+    color: #000;
+    font-family: CodePro;
+    font-weight: normal;
+    font-size: 50px;
 }
 
 
@@ -53,19 +52,16 @@ h1 {
     }
 
     .slide {
-    	overflow: hidden;
-    	position: absolute;
-    	top: 0px;
-    	left: 0px;
-    	height: 100%;
-    	// margin: 0;
-    	// z-index: 100;
-    	// z-index: 10;
-    	-webkit-backface-visibility: hidden;
+        overflow: hidden;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
 
         .slideheader {
-        	color: white;
-        	padding-top: 13px;
+            color: white;
+            padding-top: 13px;
             overflow: hidden;
             font-family: CodePro;
             font-weight: 300;
@@ -73,10 +69,8 @@ h1 {
             margin: 0;
             z-index: 100;
             position: relative;
-            // position: absolute;
             top: 0px;
             left: 0px;
-            // -webkit-backface-visibility: hidden; /* fixes chrome bug */
             -webkit-transform: translateX(-100%) rotate(-90deg);
             -webkit-transform-origin: right top;
             // currently node-webkit only recognizes the vendor-prefixed versions.
@@ -116,138 +110,138 @@ h1 {
 }
 
 .slidecontent {
-	h2 { 
-		color: #eee;
-		font-family: Lato;
-		font-weight: 300;
-		font-size: 31px;
-		margin: 0.4em 0;
+    h2 { 
+        color: #eee;
+        font-family: Lato;
+        font-weight: 300;
+        font-size: 31px;
+        margin: 0.4em 0;
 
-		&.desc-en {
-			float: left;
-			text-align: left;
-		}
+        &.desc-en {
+            float: left;
+            text-align: left;
+        }
 
-		&.desc-fr {
-			float: right;
-			text-align: right;
-		}
-	}
+        &.desc-fr {
+            float: right;
+            text-align: right;
+        }
+    }
 
-	padding-top: 40px;
-	text-align: center;
+    padding-top: 40px;
+    text-align: center;
 }
 
 .screenshot {
-	width: 100%;
-	padding-top: 0px;
-	padding-bottom: 20px;
-	clear: both;
+    width: 100%;
+    padding-top: 0px;
+    padding-bottom: 20px;
+    clear: both;
 }
 
 #infoslide {
     .slideheader {
-		background: rgb(232, 232, 232);
+        background: rgb(232, 232, 232);
     }
 
-	#infoimage {
-		width: 100%;
-	}
-	
-	h3 {
-		font-weight: 300;
-		text-align: center;
-		font-size: 29px;
-	}
+    #infoimage {
+        width: 100%;
+    }
+    
+    h3 {
+        font-weight: 300;
+        text-align: center;
+        font-size: 29px;
+    }
 
-	.slidecontent {
-		padding-top: 180px;
-		background: rgb(232, 232, 232);
-	}
+    .slidecontent {
+        padding-top: 180px;
+        background: rgb(232, 232, 232);
+    }
 }
 
 .players {
-	margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .player-icon {
-	width: 25px;
-	height: 55px;
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-	vertical-align: middle;
+    width: 25px;
+    height: 55px;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
 }
 
 .player-icon-shift {
-	.player-icon;
-	margin-bottom: 10px;
+    .player-icon;
+    margin-bottom: 10px;
 }
 
 .player-text {
-	color: #1E1E1E;
-	font-family: CodePro;
-	font-weight: normal;
-	font-size: 25px;
-	vertical-align: text-top;
-	display: inline-block;
-	padding: 0 10px;
-	margin: 0;
+    color: #1E1E1E;
+    font-family: CodePro;
+    font-weight: normal;
+    font-size: 25px;
+    vertical-align: text-top;
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0;
 }
 
 .controls {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: baseline;
-	margin-bottom: 30px;
-	flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: baseline;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .control-set {
-	flex-direction: column;
+    flex-direction: column;
 }
 
 .controls-buttons {
-	display: inline-flex;
-	flex-direction: row;
-	margin-bottom: 10px;
-	justify-content: space-around;
+    display: inline-flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    justify-content: space-around;
 }
 
 .controls-button() {
-	width: 60px;
-	height: 60px;
-	align-self: center;
+    width: 60px;
+    height: 60px;
+    align-self: center;
 }
 
 .controls-button-a {
-	.controls-button;
+    .controls-button;
 }
 
 .controls-button-b {
-	.controls-button;
+    .controls-button;
 }
 
 .controls-button-stick {
-	width: 60px;
-	height: 104px;
-	align-self: center;
+    width: 60px;
+    height: 104px;
+    align-self: center;
 }
 
 .controls-button-text {
-	color: #1E1E1E;
-	font-family: CodePro;
-	font-weight: normal;
-	font-size: 25px;
-	align-self: center;
-	padding: 0 10px;
-	margin: 0;
+    color: #1E1E1E;
+    font-family: CodePro;
+    font-weight: normal;
+    font-size: 25px;
+    align-self: center;
+    padding: 0 10px;
+    margin: 0;
 }
 
 .controls-desc {
-	font-size: 25px;
-	font-weight: 300;
+    font-size: 25px;
+    font-weight: 300;
 }
 
 
