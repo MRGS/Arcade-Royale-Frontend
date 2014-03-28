@@ -213,13 +213,16 @@ $ ->
     # ...And stick 'em in our document
     $("head").append( "<style>" + style.join("\n") + "</style>" )
 
+    # TODO: expose relevant setup values in the cson, add defaults object to be extended by settings override
     # Now set up dat accordion.
     la = $("#mainContainer").liteAccordion({
-        "easing":"easeOutCubic"
-        "containerWidth": $(window).width()
-        "containerHeight": $(window).height()
-        "headerWidth": 80
-        "slideSpeed": 400
+        easing : "easeOutCubic"
+        containerWidth : $(window).width()
+        containerHeight : $(window).height()
+        headerWidth : 80
+        slideSpeed : 400
+        minimumSlideWidth : 600
+        minimumAdjacentVisibleSlideHeaders : 0
         ## experimental optimization to hide non-visible slide content.
         ## doesn't seem to noticeably affect performance.
         # "onTriggerSlide": (e) ->
