@@ -4,4 +4,18 @@
   description_en: "To your hats, charge!"
   description_fr: "Chargez avec vos chapeaux!"
   players: "1v1"
+  controls: [
+    {
+      control: "S"
+      description: "Move / Mouvement"
+    }
+    {
+      control: "A"
+      description: "Jump / Saut"
+    }
+    {
+      control: "B"
+      description: "Attack / Attaque"
+    }
+  ]
 }
