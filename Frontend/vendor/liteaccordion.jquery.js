@@ -29,7 +29,9 @@
 
             innerPaddingLeft : 15,
             innerPaddingRight : 20,
-            minimumSlideWidth : 600
+            minimumSlideWidth : 600,
+            minimumAdjacentVisibleSlideHeaders : 3,
+            slideCompressionFactor : 0.9
         };
 
         // merge defaults with options in new settings object
@@ -109,14 +111,14 @@
             },
             // trigger slide animation
             triggerSlide : function(e) {
-                var $this = $(this),
-                    tab = {
-                        elem : $this,
-                        index : slides.index($this),
-                        next : $this.next(),
-                        prev : $this.prev(),
-                        parent : $this.parent()
-                    };
+                var $this = $(this);
+                var tab = {
+                    elem : $this,
+                    index : slides.index($this),
+                    next : $this.next(),
+                    prev : $this.prev(),
+                    parent : $this.parent()
+                };
 
                 core.currentSlide = tab.index;
                 core.slideAnimCompleteFlag = false;
@@ -160,6 +162,7 @@
 
                 }
             },
+
             // animates left and right groups of slides
             animSlideGroupUncompressed : function(triggerTab) {
                 //Handle left side
@@ -167,14 +170,14 @@
                     .filter(':lt(' + (triggerTab.index + 1) + ')')
                     .each(function() {
                         var $this = $(this);
-                        var ind = slides.index($this);
+                        var slideIndex = slides.index($this);
 
                         var tab = {
                             elem : $this,
-                            index : ind,
+                            index : slideIndex,
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : (ind - 1) * settings.headerWidth
+                            pos : (slideIndex - 1) * settings.headerWidth
                         };
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
@@ -185,15 +188,119 @@
                     .filter(':gt(' + triggerTab.index + ')')
                     .each(function() {
                         var $this = $(this);
-                        var ind = slides.index($this);
-
+                        var slideIndex = slides.index($this);
+                        
                         var tab = {
                             elem : $this,
-                            index : slides.index($this),
+                            index : slideIndex,
                             next : $this.next(),
                             prev : $this.prev(),
-                            pos : slideWidth + (ind - 1) * settings.headerWidth
+                            pos : slideWidth + (slideIndex - 1) * settings.headerWidth
                         };
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
+
+                slides
+                    .removeClass('selected')
+                    .filter(triggerTab.elem)
+                    .addClass('selected');
+            },
+            animSlideGroupCompressed : function(triggerTab) {
+                //Handle self
+                triggerTab.pos = (triggerTab.index - 1) * settings.headerWidth;
+                core.animSlide.call(triggerTab, triggerTab);
+
+                //Handle left side
+                slides
+                    .filter(':lt(' + (triggerTab.index + 1) + ')')
+                    .each(function() {
+                        var $this = $(this);
+                        var slideIndex = slides.index($this);
+                        var tab = {
+                            elem : $this,
+                            index : slideIndex,
+                            next : $this.next(),
+                            prev : $this.prev()
+                        };
+
+                        tab.pos = (slideIndex - 1) * settings.headerWidth;
+
+
+                        // pass original trigger context for callback fn
+                        core.animSlide.call(tab, triggerTab);
+                    });
+
+                //Assign space on right...
+                // console.log(triggerTab.elem.css("left"));
+                // var triggerTab.pos = parseInt(triggerTab.elem.css('left'), 10)
+                var widthRemaining = settings.containerWidth - (triggerTab.pos + slideWidth + settings.headerWidth);
+                console.log(widthRemaining);
+
+                console.log("trigger: " +
+                    triggerTab.elem.find('.slideheader').text() +
+                    " = " +
+                    triggerTab.index + ", " +
+                    triggerTab.pos + "px"
+                );
+
+                //Handle right side
+                slides
+                    .filter(':gt(' + triggerTab.index + ')')
+                    .each(function() {
+                        var $this = $(this);
+                        var slideIndex = slides.index($this);
+                        var tab = {
+                            elem : $this,
+                            index : slideIndex,
+                            next : $this.next(),
+                            prev : $this.prev()
+                        };
+
+                        var slidesRemaining = slides.length - slideIndex;
+                        var adjustedIndex = slideIndex - triggerTab.index;
+
+                        var name = $this.find('.slideheader').text();
+                        console.log(name + " " + adjustedIndex);
+
+                        if(slideIndex - triggerTab.index < settings.minimumAdjacentVisibleSlideHeaders) {
+                            //originally:
+                            // tab.pos = slideWidth + (slideIndex - 1) * settings.headerWidth;
+
+                            // tab.pos = triggerTab.pos + slideWidth + adjustedIndex * settings.headerWidth;
+                            widthRemaining -= settings.headerWidth;
+                            tab.pos = settings.containerWidth - widthRemaining;
+                        }
+                        else {
+                            // proportion = remainingwidth / (headerWidth * remainingcount)
+                            // proportion *= compressionfactor
+
+                            var averagedWidth = widthRemaining / slidesRemaining;
+
+                            //Clamp to [0, widthRemaining]
+                            var maximalWidth = Math.max(0, Math.min(settings.headerWidth, widthRemaining));
+                            
+                            //Lerp between the two based on compression factor:
+                            var offset = averagedWidth + (maximalWidth - averagedWidth) * settings.slideCompressionFactor;
+
+                            // value1 + (value2 - value1) * amount
+
+                            console.log("widthRemaining: " + widthRemaining);
+                            console.log("averagedWidth: " + averagedWidth);
+                            console.log("maximalWidth: " + maximalWidth);
+                            console.log("offset: " + offset);
+                            
+                            // tab.pos = triggerTab.pos + slideWidth + adjustedIndex * settings.headerWidth;
+
+                            widthRemaining -= offset;
+                            tab.pos = settings.containerWidth - settings.headerWidth - widthRemaining;
+                            console.log("pos: " + tab.pos);
+
+
+                            // tab.pos = triggerTab.pos + offset;
+                            // tab.pos = slideWidth + (slideIndex - 1) * settings.headerWidth;
+                        }
+
                         // pass original trigger context for callback fn
                         core.animSlide.call(tab, triggerTab);
                     });
@@ -205,15 +312,18 @@
             }
         };
 
+
         if(slideWidth < settings.minimumSlideWidth) {
             slideWidth = settings.minimumSlideWidth;
             console.log("compressing!");
+            // core.animSlideGroup = core.animSlideGroupCompressed;
             core.animSlideGroup = core.animSlideGroupUncompressed;
         }
         else {
             core.animSlideGroup = core.animSlideGroupUncompressed;
-            // core.animSlideGroup = core.animSlideGroupCompressed;
         }
+        //TODO: slide width should be absolute/padding when larger than min width? (in the css)
+
 
         core.initStyles();
         slides.on('click.liteAccordion', core.triggerSlide);
