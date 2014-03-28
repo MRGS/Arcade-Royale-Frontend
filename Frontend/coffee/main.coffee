@@ -221,7 +221,7 @@ $ ->
         containerHeight : $(window).height()
         headerWidth : 80
         slideSpeed : 400
-        minimumSlideWidth : 600
+        minimumSlideWidth : 0
         minimumAdjacentVisibleSlideHeaders : 0
         ## experimental optimization to hide non-visible slide content.
         ## doesn't seem to noticeably affect performance.
